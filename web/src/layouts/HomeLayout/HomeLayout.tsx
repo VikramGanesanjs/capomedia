@@ -2,6 +2,7 @@ import { Box, Button, Divider, Typography, useTheme } from '@mui/material'
 
 import { navigate, routes } from '@redwoodjs/router'
 
+import { useAuth } from 'src/auth'
 import Logo from 'src/components/Logo/Logo'
 
 type HomeLayoutProps = {
@@ -9,6 +10,8 @@ type HomeLayoutProps = {
 }
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
+  const { isAuthenticated, currentUser, logOut } = useAuth()
+
   const theme = useTheme()
   return (
     <Box
@@ -47,9 +50,28 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         <Button onClick={() => navigate(routes.contact())} variant="contained">
           Contact Us
         </Button>
-        <Button onClick={() => navigate(routes.login())} variant="contained">
-          Login
-        </Button>
+        {isAuthenticated ? (
+          <Button onClick={logOut} variant="contained">
+            Logout
+          </Button>
+        ) : (
+          <Button onClick={() => navigate(routes.login())} variant="contained">
+            Login
+          </Button>
+        )}
+
+        {isAuthenticated && (
+          <Button
+            onClick={() => navigate(routes.checkout())}
+            variant="contained"
+          >
+            Checkout
+          </Button>
+        )}
+
+        {isAuthenticated && (
+          <Typography>{`Hello ${currentUser.name}!`}</Typography>
+        )}
       </Box>
       <Box
         sx={{
