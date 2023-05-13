@@ -45,4 +45,5 @@ model Video {
   description String?
   vimeoUrl    String
   createdAt   DateTime @default(now())
+  credits     String
 }

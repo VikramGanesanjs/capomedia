@@ -1,4 +1,5 @@
 import { Box, Button, Divider, Typography, useTheme } from '@mui/material'
+import { Toaster } from 'react-hot-toast'
 
 import { navigate, routes } from '@redwoodjs/router'
 
@@ -10,7 +11,7 @@ type HomeLayoutProps = {
 }
 
 const HomeLayout = ({ children }: HomeLayoutProps) => {
-  const { isAuthenticated, currentUser, logOut } = useAuth()
+  const { isAuthenticated, currentUser, logOut, hasRole } = useAuth()
 
   const theme = useTheme()
   return (
@@ -50,6 +51,19 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         <Button onClick={() => navigate(routes.contact())} variant="contained">
           Contact Us
         </Button>
+        {isAuthenticated && (hasRole('student') || hasRole('admin')) && (
+          <Button
+            onClick={() => navigate(routes.checkout())}
+            variant="contained"
+          >
+            Checkout
+          </Button>
+        )}
+        {isAuthenticated && hasRole('admin') && (
+          <Button onClick={() => navigate(routes.admin())} variant="contained">
+            Admin
+          </Button>
+        )}
         {isAuthenticated ? (
           <Button onClick={logOut} variant="contained">
             Logout
@@ -61,17 +75,9 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         )}
 
         {isAuthenticated && (
-          <Button
-            onClick={() => navigate(routes.checkout())}
-            variant="contained"
-          >
-            Checkout
-          </Button>
+          <Typography>{`Hello ${currentUser.name.split(' ')[0]}!`}</Typography>
         )}
-
-        {isAuthenticated && (
-          <Typography>{`Hello ${currentUser.name}!`}</Typography>
-        )}
+        <Toaster />
       </Box>
       <Box
         sx={{

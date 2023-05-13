@@ -114,6 +114,7 @@ export const handler = async (
           hashedPassword: hashedPassword,
           salt: salt,
           name: userAttributes.name,
+          roles: userAttributes.roles,
         },
       })
     },

@@ -1,6 +1,8 @@
 import { useRef } from 'react'
 import { useEffect } from 'react'
 
+import { Box } from '@mui/material'
+
 import {
   Form,
   Label,
@@ -8,6 +10,7 @@ import {
   PasswordField,
   FieldError,
   Submit,
+  CheckboxField,
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
@@ -35,8 +38,9 @@ const SignupPage = () => {
       name: data.name,
       username: data.email,
       password: data.password,
+      roles: data.isStudent ? 'student' : 'user',
     })
-
+    console.log(data.isStudent ? 'student' : 'user')
     if (response.message) {
       toast(response.message)
     } else if (response.error) {
@@ -124,6 +128,31 @@ const SignupPage = () => {
                     }}
                   />
                   <FieldError name="password" className="rw-field-error" />
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Label
+                      name="isStudent"
+                      className="rw-label"
+                      errorClassName="rw-label rw-label-error"
+                    >
+                      Are you a student in Capomedia?
+                    </Label>
+                    <CheckboxField
+                      name="isStudent"
+                      className="rw-input"
+                      errorClassName="rw-input rw-input-error"
+                      style={{
+                        height: 100,
+                        width: 100,
+                      }}
+                    />
+                  </Box>
 
                   <div className="rw-button-group">
                     <Submit className="rw-button rw-button-blue">

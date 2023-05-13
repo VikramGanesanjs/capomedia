@@ -17,7 +17,16 @@ import HomeLayout from './layouts/HomeLayout/HomeLayout'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Private unauthenticated="home">
+      <Set wrap={ScaffoldLayout} title="Videos" titleTo="videos" buttonLabel="New Video" buttonTo="newVideo">
+        <Route path="/videos/new" page={VideoNewVideoPage} name="newVideo" />
+        <Route path="/videos/{id:Int}/edit" page={VideoEditVideoPage} name="editVideo" />
+        <Route path="/videos/{id:Int}" page={VideoVideoPage} name="video" />
+        <Route path="/videos" page={VideoVideosPage} name="videos" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Videos" titleTo="videos" buttonLabel="New Video" buttonTo="newVideo">
+      </Set>
+      <Route path="/admin" page={AdminPage} name="admin" />
+      <Private unauthenticated="login">
         <Set wrap={ScaffoldLayout} title="Equipments" titleTo="equipments" buttonLabel="New Equipment" buttonTo="newEquipment">
           <Route path="/equipments/new" page={EquipmentNewEquipmentPage} name="newEquipment" />
           <Route path="/equipments/{id:Int}/edit" page={EquipmentEditEquipmentPage} name="editEquipment" />
@@ -41,7 +50,7 @@ const Routes = () => {
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
-        <Private unauthenticated="home">
+        <Private unauthenticated="login">
           <Route path="/checkout" page={CheckoutPage} name="checkout" />
         </Private>
       </Set>
