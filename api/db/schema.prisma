@@ -26,6 +26,7 @@ model Equipment {
   description String?
   bookings    Booking[]
   createdAt   DateTime  @default(now())
+  category    String    @default("miscellaneous")
 }
 
 model Booking {
@@ -46,4 +47,6 @@ model Video {
   vimeoUrl    String
   createdAt   DateTime @default(now())
   credits     String
+  category    String
+  featured    Boolean  @default(false)
 }

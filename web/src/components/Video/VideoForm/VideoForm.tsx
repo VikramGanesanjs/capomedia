@@ -1,3 +1,5 @@
+import type { EditVideoById, UpdateVideoInput } from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -6,8 +8,6 @@ import {
   TextField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type { EditVideoById, UpdateVideoInput } from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormVideo = NonNullable<EditVideoById['video']>
@@ -104,6 +104,24 @@ const VideoForm = (props: VideoFormProps) => {
         />
 
         <FieldError name="credits" className="rw-field-error" />
+
+        <Label
+          name="category"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Category
+        </Label>
+
+        <TextField
+          name="category"
+          defaultValue={props.video?.credits}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+          validation={{ required: true }}
+        />
+
+        <FieldError name="category" className="rw-field-error" />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

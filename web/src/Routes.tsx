@@ -15,16 +15,26 @@ import { useAuth } from './auth'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 
 const Routes = () => {
+  const { hasRole } = useAuth()
+
   return (
     <Router useAuth={useAuth}>
-      <Set wrap={ScaffoldLayout} title="Videos" titleTo="videos" buttonLabel="New Video" buttonTo="newVideo">
-        <Route path="/videos/new" page={VideoNewVideoPage} name="newVideo" />
-        <Route path="/videos/{id:Int}/edit" page={VideoEditVideoPage} name="editVideo" />
-        <Route path="/videos/{id:Int}" page={VideoVideoPage} name="video" />
-        <Route path="/videos" page={VideoVideosPage} name="videos" />
-      </Set>
-      <Set wrap={ScaffoldLayout} title="Videos" titleTo="videos" buttonLabel="New Video" buttonTo="newVideo">
-      </Set>
+      {hasRole('admin') ? (
+        <Set wrap={ScaffoldLayout} title="Videos" titleTo="videos" buttonLabel="New Video" buttonTo="newVideo">
+          <Route path="/videos/new" page={VideoNewVideoPage} name="newVideo" />
+          <Route path="/videos/{id:Int}/edit" page={VideoEditVideoPage} name="editVideo" />
+          <Route path="/videos/{id:Int}" page={VideoVideoPage} name="video" />
+          <Route path="/videos" page={VideoVideosPage} name="videos" />
+        </Set>
+      ) : (
+        <>
+          <Route path="/videos/new" page={VideoNewVideoPage} name="newVideo" />
+          <Route path="/videos/{id:Int}/edit" page={VideoEditVideoPage} name="editVideo" />
+          <Route path="/videos/{id:Int}" page={VideoVideoPage} name="video" />
+          <Route path="/videos" page={VideoVideosPage} name="videos" />
+        </>
+      )}
+
       <Route path="/admin" page={AdminPage} name="admin" />
       <Private unauthenticated="login">
         <Set wrap={ScaffoldLayout} title="Equipments" titleTo="equipments" buttonLabel="New Equipment" buttonTo="newEquipment">
@@ -40,12 +50,11 @@ const Routes = () => {
           <Route path="/bookings" page={BookingBookingsPage} name="bookings" />
         </Set>
       </Private>
-
+      <Route path="/theater" page={TheaterPage} name="theater" />
       <Set wrap={HomeLayout}>
         <Route path="/" page={HomePage} name="home" />
         <Route path="/about" page={AboutPage} name="about" />
         <Route path="/contact" page={ContactPage} name="contact" />
-        <Route path="/theater" page={TheaterPage} name="theater" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />

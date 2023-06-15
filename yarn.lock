@@ -21869,6 +21869,7 @@ __metadata:
     "@redwoodjs/auth-dbauth-setup": 5.0.6
     "@redwoodjs/core": 5.0.6
     react-player: ^2.12.0
+    typeface-notable: ^1.1.13
   languageName: unknown
   linkType: soft
 
@@ -24107,6 +24108,13 @@ __metadata:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: 6005cb31df50eef8b1f3c780eb71a17925f3038a100d82f9406ac2ad1de5eb59f8e6decbdc145b3a1f8e5836e17b0c0002fb698b9fe2516b8f9f9ff602d36412
+  languageName: node
+  linkType: hard
+
+"typeface-notable@npm:^1.1.13":
+  version: 1.1.13
+  resolution: "typeface-notable@npm:1.1.13"
+  checksum: 48dd81f813f27c124f91c62780cfd1c5413faca06bb727c5c6bb285285ef734835feb7c0584db02fd96630d9a0bd75f09eae0243586428f8b84da6162dfb502b
   languageName: node
   linkType: hard
 

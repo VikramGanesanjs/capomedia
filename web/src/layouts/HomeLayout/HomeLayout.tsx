@@ -37,7 +37,13 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         }}
       >
         <Logo />
-        <Button onClick={() => navigate(routes.home())}>
+        <Button
+          onClick={() => navigate(routes.home())}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           <Typography variant="h1" color="#000000">
             CAPOmedia
           </Typography>

@@ -16,6 +16,7 @@ export const QUERY = gql`
       vimeoUrl
       createdAt
       credits
+      category
     }
   }
 `
@@ -28,6 +29,7 @@ const UPDATE_VIDEO_MUTATION = gql`
       vimeoUrl
       createdAt
       credits
+      category
     }
   }
 `

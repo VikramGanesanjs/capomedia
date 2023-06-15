@@ -12,6 +12,12 @@ export const video: QueryResolvers['video'] = ({ id }) => {
   })
 }
 
+export const videosByCategory: QueryResolvers['videosByCategory'] = ({
+  category,
+}) => {
+  return db.video.findMany({ where: { category } })
+}
+
 export const createVideo: MutationResolvers['createVideo'] = ({ input }) => {
   return db.video.create({
     data: input,

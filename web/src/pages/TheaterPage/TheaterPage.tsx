@@ -1,19 +1,91 @@
-import { Link, routes } from '@redwoodjs/router'
+import React, { useState } from 'react'
+
+import { Box, Tab, Tabs, Typography } from '@mui/material'
+
 import { MetaTags } from '@redwoodjs/web'
 
+import VideoCategoryCell from 'src/components/VideoCategoryCell'
+
+interface TabPanelProps {
+  children?: JSX.Element
+  index: number
+  value: number
+}
+
+const TabPanel = ({ value, index, children }: TabPanelProps): JSX.Element => {
+  if (value === index) {
+    return children
+  } else {
+    return null
+  }
+}
+
 const TheaterPage = () => {
+  const [category, setCategory] = useState(0)
+
+  const categories = [
+    'Featured',
+    'Capo.360',
+    'Short Film',
+    'Spot Feature',
+    'Independent',
+    'Show Open',
+  ]
+
   return (
     <>
       <MetaTags title="Theater" description="Theater page" />
-
-      <h1>TheaterPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/TheaterPage/TheaterPage.tsx</code>
-      </p>
-      <p>
-        My default route is named <code>theater</code>, link to me with `
-        <Link to={routes.theater()}>Theater</Link>`
-      </p>
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          bgcolor: '#000000',
+          overflow: 'auto',
+          p: 0,
+          m: 0,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <Typography variant="h1" color="white">
+            Theater
+          </Typography>
+          <Box>
+            <Tabs
+              value={category}
+              onChange={(e, v) => setCategory(v)}
+              centered
+              variant="scrollable"
+              scrollButtons="auto"
+            >
+              {categories.map((categoryAtI, i) => (
+                <Tab
+                  label={categoryAtI}
+                  color="white"
+                  sx={{
+                    color: 'white',
+                  }}
+                  key={i}
+                />
+              ))}
+            </Tabs>
+          </Box>
+          {categories.map((categoryAtI, i) => (
+            <TabPanel value={category} index={i} key={i}>
+              <VideoCategoryCell category={categoryAtI} />
+            </TabPanel>
+          ))}
+        </Box>
+      </Box>
     </>
   )
 }

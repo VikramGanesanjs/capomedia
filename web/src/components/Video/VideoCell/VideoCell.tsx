@@ -13,6 +13,7 @@ export const QUERY = gql`
       vimeoUrl
       createdAt
       credits
+      category
     }
   }
 `

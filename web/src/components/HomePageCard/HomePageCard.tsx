@@ -19,7 +19,8 @@ const HomePageCard = ({
     <Card
       variant="outlined"
       sx={{
-        bgcolor: color,
+        borderColor: color,
+        borderWidth: 10,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -28,17 +29,17 @@ const HomePageCard = ({
         gap: 5,
       }}
     >
-      <Typography variant="h1" sx={{ color: '#ffffff', textAlign: 'center' }}>
+      <Typography variant="h1" sx={{ color: color, textAlign: 'center' }}>
         {name}
       </Typography>
       <Divider sx={{ bgcolor: '#ffffff' }} />
-      <Typography variant="h3" sx={{ color: '#ffffff', textAlign: 'center' }}>
+      <Typography variant="h4" sx={{ color: color, textAlign: 'center' }}>
         {description}
       </Typography>
       <Divider />
       <Button
         variant="outlined"
-        sx={{ color: '#ffffff', borderColor: '#ffffff' }}
+        sx={{ color: color, borderColor: color }}
         size="large"
         onClick={() => navigate(route)}
       >

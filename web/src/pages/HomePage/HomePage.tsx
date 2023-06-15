@@ -46,6 +46,7 @@ const HomePage = () => {
         alignItems: 'center',
         flexDirection: 'column',
         gap: 5,
+        backgroundImage: `url(${'web/public/assets/IMG_3155.JPG'})`,
       }}
     >
       <MetaTags title="Home" description="Home page" />
@@ -57,7 +58,7 @@ const HomePage = () => {
       >
         Home of Capo.360 and tons of student created films!
       </Typography>
-      <Typography variant="h3">Latest Episode:</Typography>
+      <Typography variant="h4">Latest Episode:</Typography>
       <Box
         sx={{
           boxShadow: `30px 30px ${theme.palette.secondary.dark}`,

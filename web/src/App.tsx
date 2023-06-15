@@ -15,6 +15,30 @@ import './scaffold.css'
 import './index.css'
 
 const theme = createTheme({
+  typography: {
+    h1: {
+      fontFamily: "'Notable', 'sans-serif'",
+      fontSize: '4rem',
+    },
+    h2: {
+      fontFamily: "'Ubuntu', 'sans-serif'",
+      fontSize: '2.2rem',
+    },
+    h4: {
+      color: '#D95448',
+      fontFamily: "'Notable', 'sans-serif'",
+    },
+    caption: {
+      fontFamily: "'Merriweather', 'sans-serif'",
+    },
+    body1: {
+      color: '#261B1A',
+      fontFamily: "'Ubuntu', 'sans-serif'",
+    },
+    body2: {
+      fontFamily: "'Merriweather', 'serif'",
+    },
+  },
   palette: {
     primary: {
       light: '#E1DCC8',
@@ -29,17 +53,19 @@ const theme = createTheme({
 })
 
 const App = () => (
-  <FatalErrorBoundary page={FatalErrorPage}>
-    <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-      <AuthProvider>
-        <RedwoodApolloProvider useAuth={useAuth}>
-          <ThemeProvider theme={theme}>
-            <Routes />
-          </ThemeProvider>
-        </RedwoodApolloProvider>
-      </AuthProvider>
-    </RedwoodProvider>
-  </FatalErrorBoundary>
+  <>
+    <FatalErrorBoundary page={FatalErrorPage}>
+      <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
+        <AuthProvider>
+          <RedwoodApolloProvider useAuth={useAuth}>
+            <ThemeProvider theme={theme}>
+              <Routes />
+            </ThemeProvider>
+          </RedwoodApolloProvider>
+        </AuthProvider>
+      </RedwoodProvider>
+    </FatalErrorBoundary>
+  </>
 )
 
 export default App

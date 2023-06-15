@@ -1,11 +1,11 @@
+import type { DeleteVideoMutationVariables, FindVideos } from 'types/graphql'
+
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Video/VideosCell'
 import { timeTag, truncate } from 'src/lib/formatters'
-
-import type { DeleteVideoMutationVariables, FindVideos } from 'types/graphql'
 
 const DELETE_VIDEO_MUTATION = gql`
   mutation DeleteVideoMutation($id: Int!) {
@@ -59,6 +59,7 @@ const VideosList = ({ videos }: FindVideos) => {
               <td>{truncate(video.vimeoUrl)}</td>
               <td>{timeTag(video.createdAt)}</td>
               <td>{truncate(video.credits)}</td>
+              <td>{truncate(video.category)}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
