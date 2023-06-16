@@ -19,6 +19,18 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
+      <Set wrap={ScaffoldLayout} title="Bookings" titleTo="bookings" buttonLabel="New Booking" buttonTo="newBooking">
+        <Route path="/bookings/new" page={BookingNewBookingPage} name="newBooking" />
+        <Route path="/bookings/{id:Int}/edit" page={BookingEditBookingPage} name="editBooking" />
+        <Route path="/bookings/{id:Int}" page={BookingBookingPage} name="booking" />
+        <Route path="/bookings" page={BookingBookingsPage} name="bookings" />
+      </Set>
+      <Set wrap={ScaffoldLayout} title="Equipments" titleTo="equipments" buttonLabel="New Equipment" buttonTo="newEquipment">
+          <Route path="/equipments/new" page={EquipmentNewEquipmentPage} name="newEquipment" />
+          <Route path="/equipments/{id:Int}/edit" page={EquipmentEditEquipmentPage} name="editEquipment" />
+          <Route path="/equipments/{id:Int}" page={EquipmentEquipmentPage} name="equipment" />
+          <Route path="/equipments" page={EquipmentEquipmentsPage} name="equipments" />
+      </Set>
       {hasRole('admin') ? (
         <Set wrap={ScaffoldLayout} title="Videos" titleTo="videos" buttonLabel="New Video" buttonTo="newVideo">
           <Route path="/videos/new" page={VideoNewVideoPage} name="newVideo" />
@@ -36,20 +48,6 @@ const Routes = () => {
       )}
 
       <Route path="/admin" page={AdminPage} name="admin" />
-      <Private unauthenticated="login">
-        <Set wrap={ScaffoldLayout} title="Equipments" titleTo="equipments" buttonLabel="New Equipment" buttonTo="newEquipment">
-          <Route path="/equipments/new" page={EquipmentNewEquipmentPage} name="newEquipment" />
-          <Route path="/equipments/{id:Int}/edit" page={EquipmentEditEquipmentPage} name="editEquipment" />
-          <Route path="/equipments/{id:Int}" page={EquipmentEquipmentPage} name="equipment" />
-          <Route path="/equipments" page={EquipmentEquipmentsPage} name="equipments" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="Bookings" titleTo="bookings" buttonLabel="New Booking" buttonTo="newBooking">
-          <Route path="/bookings/new" page={BookingNewBookingPage} name="newBooking" />
-          <Route path="/bookings/{id:Int}/edit" page={BookingEditBookingPage} name="editBooking" />
-          <Route path="/bookings/{id:Int}" page={BookingBookingPage} name="booking" />
-          <Route path="/bookings" page={BookingBookingsPage} name="bookings" />
-        </Set>
-      </Private>
       <Route path="/theater" page={TheaterPage} name="theater" />
       <Set wrap={HomeLayout}>
         <Route path="/" page={HomePage} name="home" />

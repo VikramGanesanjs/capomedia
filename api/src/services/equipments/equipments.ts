@@ -24,6 +24,14 @@ export const createEquipment: MutationResolvers['createEquipment'] = ({
   })
 }
 
+export const equipmentByCategory: QueryResolvers['equipmentByCategory'] = ({
+  category,
+}) => {
+  return db.equipment.findMany({
+    where: { category },
+  })
+}
+
 export const updateEquipment: MutationResolvers['updateEquipment'] = ({
   id,
   input,

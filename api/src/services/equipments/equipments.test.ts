@@ -30,10 +30,11 @@ describe('equipments', () => {
 
   scenario('creates a equipment', async () => {
     const result = await createEquipment({
-      input: { name: 'String' },
+      input: { name: 'String', category: 'String' },
     })
 
     expect(result.name).toEqual('String')
+    expect(result.category).toEqual('String')
   })
 
   scenario('updates a equipment', async (scenario: StandardScenario) => {

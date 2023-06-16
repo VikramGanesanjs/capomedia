@@ -31,25 +31,35 @@ describe('bookings', () => {
   scenario('creates a booking', async (scenario: StandardScenario) => {
     const result = await createBooking({
       input: {
-        startTime: '2023-05-06T18:45:28.120Z',
-        endTime: '2023-05-06T18:45:28.120Z',
-        equipmentId: scenario.booking.two.equipmentId,
+        startTime: '2023-06-15T22:57:44.034Z',
+        endTime: '2023-06-15T22:57:44.034Z',
+        userId: scenario.booking.two.userId,
+        producerName: 'String',
+        producerEmail: 'String',
+        directorName: 'String',
+        projectName: 'String',
+        extraComments: 'String',
       },
     })
 
-    expect(result.startTime).toEqual(new Date('2023-05-06T18:45:28.120Z'))
-    expect(result.endTime).toEqual(new Date('2023-05-06T18:45:28.120Z'))
-    expect(result.equipmentId).toEqual(scenario.booking.two.equipmentId)
+    expect(result.startTime).toEqual(new Date('2023-06-15T22:57:44.034Z'))
+    expect(result.endTime).toEqual(new Date('2023-06-15T22:57:44.034Z'))
+    expect(result.userId).toEqual(scenario.booking.two.userId)
+    expect(result.producerName).toEqual('String')
+    expect(result.producerEmail).toEqual('String')
+    expect(result.directorName).toEqual('String')
+    expect(result.projectName).toEqual('String')
+    expect(result.extraComments).toEqual('String')
   })
 
   scenario('updates a booking', async (scenario: StandardScenario) => {
     const original = (await booking({ id: scenario.booking.one.id })) as Booking
     const result = await updateBooking({
       id: original.id,
-      input: { startTime: '2023-05-07T18:45:28.120Z' },
+      input: { startTime: '2023-06-16T22:57:44.034Z' },
     })
 
-    expect(result.startTime).toEqual(new Date('2023-05-07T18:45:28.120Z'))
+    expect(result.startTime).toEqual(new Date('2023-06-16T22:57:44.034Z'))
   })
 
   scenario('deletes a booking', async (scenario: StandardScenario) => {

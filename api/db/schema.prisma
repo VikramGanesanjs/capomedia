@@ -21,23 +21,37 @@ model User {
 }
 
 model Equipment {
-  id          Int       @id @default(autoincrement())
+  id          Int                    @id @default(autoincrement())
   name        String
   description String?
-  bookings    Booking[]
-  createdAt   DateTime  @default(now())
-  category    String    @default("miscellaneous")
+  bookings    BookingsOnEquipments[]
+  createdAt   DateTime               @default(now())
+  category    String
 }
 
 model Booking {
-  id          Int       @id @default(autoincrement())
-  startTime   DateTime
-  endTime     DateTime
+  id            Int                    @id @default(autoincrement())
+  startTime     DateTime
+  endTime       DateTime
+  equipments    BookingsOnEquipments[]
+  user          User                   @relation(fields: [userId], references: [id])
+  userId        Int
+  createdAt     DateTime               @default(now())
+  producerName  String
+  producerEmail String
+  directorName  String
+  projectName   String
+  extraComments String
+}
+
+model BookingsOnEquipments {
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+  bookingId   Int // relation scalar field (used in the `@relation` attribute above)
   equipment   Equipment @relation(fields: [equipmentId], references: [id])
-  equipmentId Int
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-  createdAt   DateTime  @default(now())
+  equipmentId Int // relation scalar field (used in the `@relation` attribute above)
+  assignedAt  DateTime  @default(now())
+
+  @@id([bookingId, equipmentId])
 }
 
 model Video {

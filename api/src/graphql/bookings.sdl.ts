@@ -3,9 +3,15 @@ export const schema = gql`
     id: Int!
     startTime: DateTime!
     endTime: DateTime!
-    equipment: Equipment!
-    equipmentId: Int!
+    equipments: [BookingEquipment!]!
+    user: User!
+    userId: Int!
     createdAt: DateTime!
+    producerName: String!
+    producerEmail: String!
+    directorName: String!
+    projectName: String!
+    extraComments: String!
   }
 
   type Query {
@@ -13,16 +19,39 @@ export const schema = gql`
     booking(id: Int!): Booking @requireAuth
   }
 
+  type BookingEquipment {
+    id: Int!
+    booking: Booking!
+    equipment: Equipment!
+  }
+  input BookingEquipmentInput {
+    equipmentId: Int!
+    equipmentName: String!
+    equipmentCategory: String!
+  }
+
   input CreateBookingInput {
     startTime: DateTime!
     endTime: DateTime!
-    equipmentId: Int!
+    userId: Int!
+    producerName: String!
+    producerEmail: String!
+    directorName: String!
+    projectName: String!
+    extraComments: String!
+    equipments: [BookingEquipmentInput!]!
   }
 
   input UpdateBookingInput {
     startTime: DateTime
     endTime: DateTime
-    equipmentId: Int
+    userId: Int
+    producerName: String
+    producerEmail: String
+    directorName: String
+    projectName: String
+    extraComments: String
+    equipments: [BookingEquipmentInput!]
   }
 
   type Mutation {
