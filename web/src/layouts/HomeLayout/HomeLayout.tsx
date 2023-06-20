@@ -5,6 +5,7 @@ import { navigate, routes } from '@redwoodjs/router'
 
 import { useAuth } from 'src/auth'
 import Logo from 'src/components/Logo/Logo'
+import MenuDrawer from 'src/components/MenuDrawer/MenuDrawer'
 
 type HomeLayoutProps = {
   children?: React.ReactNode
@@ -44,21 +45,38 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
             justifyContent: 'center',
           }}
         >
-          <Typography variant="h1" color="#000000">
+          <Typography
+            variant="h1"
+            color="#000000"
+            sx={{ display: { xs: 'none', xl: 'block' } }}
+          >
             CAPOmedia
           </Typography>
         </Button>
-        <Button onClick={() => navigate(routes.about())} variant="contained">
+        <Button
+          onClick={() => navigate(routes.about())}
+          sx={{ display: { xs: 'none', xl: 'block' } }}
+          variant="contained"
+        >
           About
         </Button>
-        <Button onClick={() => navigate(routes.theater())} variant="contained">
+        <Button
+          onClick={() => navigate(routes.theater())}
+          sx={{ display: { xs: 'none', xl: 'block' } }}
+          variant="contained"
+        >
           Theater
         </Button>
-        <Button onClick={() => navigate(routes.contact())} variant="contained">
+        <Button
+          onClick={() => navigate(routes.contact())}
+          sx={{ display: { xs: 'none', xl: 'block' } }}
+          variant="contained"
+        >
           Contact Us
         </Button>
         {isAuthenticated && (hasRole('student') || hasRole('admin')) && (
           <Button
+            sx={{ display: { xs: 'none', xl: 'block' } }}
             onClick={() => navigate(routes.checkout())}
             variant="contained"
           >
@@ -66,25 +84,41 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           </Button>
         )}
         {isAuthenticated && hasRole('admin') && (
-          <Button onClick={() => navigate(routes.admin())} variant="contained">
+          <Button
+            onClick={() => navigate(routes.admin())}
+            variant="contained"
+            sx={{ display: { xs: 'none', xl: 'block' } }}
+          >
             Admin
           </Button>
         )}
         {isAuthenticated ? (
-          <Button onClick={logOut} variant="contained">
+          <Button
+            onClick={logOut}
+            variant="contained"
+            sx={{ display: { xs: 'none', xl: 'block' } }}
+          >
             Logout
           </Button>
         ) : (
-          <Button onClick={() => navigate(routes.login())} variant="contained">
+          <Button
+            onClick={() => navigate(routes.login())}
+            variant="contained"
+            sx={{ display: { xs: 'none', xl: 'block' } }}
+          >
             Login
           </Button>
         )}
 
         {isAuthenticated && (
-          <Typography>{`Hello ${currentUser.name.split(' ')[0]}!`}</Typography>
+          <Typography sx={{ display: { xs: 'none', md: 'block' } }}>{`Hello ${
+            currentUser.name.split(' ')[0]
+          }!`}</Typography>
         )}
         <Toaster />
+        <MenuDrawer sx={{ display: { lg: 'block', xl: 'none' } }} />
       </Box>
+
       <Box
         sx={{
           display: 'flex',

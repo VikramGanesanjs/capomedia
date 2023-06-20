@@ -1,10 +1,11 @@
+import { Box, Typography } from '@mui/material'
+import type { CreateBookingInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import BookingForm from 'src/components/Booking/BookingForm'
-
-import type { CreateBookingInput } from 'types/graphql'
 
 const CREATE_BOOKING_MUTATION = gql`
   mutation CreateBookingMutation($input: CreateBookingInput!) {
@@ -33,14 +34,28 @@ const NewBooking = () => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">New Booking</h2>
-      </header>
-      <div className="rw-segment-main">
-        <BookingForm onSave={onSave} loading={loading} error={error} />
-      </div>
-    </div>
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+      }}
+    >
+      <Typography variant="h4">Equipment Checkout</Typography>
+      <Typography>
+        Begin by filling out the checkout date and return date for your
+        equipment, and the form will list all of the equipment that is available
+        or unavailable for you to check out.{' '}
+      </Typography>
+      <Typography>
+        If a piece of equipment is listed as unavailable, the project that is
+        using itis also displayed, so if absolutely necessary you may work out
+        any equipment issues with the other producer and the episode's equipment
+        manager
+      </Typography>
+      <BookingForm onSave={onSave} loading={loading} error={error} />
+    </Box>
   )
 }
 

@@ -1,4 +1,6 @@
-import { Typography } from '@mui/material'
+import { useState } from 'react'
+
+import { Typography, Box, Divider, useTheme } from '@mui/material'
 import type { EditBookingById, UpdateBookingInput } from 'types/graphql'
 
 import {
@@ -7,12 +9,13 @@ import {
   FieldError,
   Label,
   DatetimeLocalField,
-  NumberField,
   TextField,
+  TextAreaField,
   Submit,
 } from '@redwoodjs/forms'
 import type { RWGqlError } from '@redwoodjs/forms'
 
+import { useAuth } from 'src/auth'
 import EquipmentAvailableByCategoryCell from 'src/components/EquipmentAvailableByCategoryCell'
 const formatDatetime = (value) => {
   if (value) {
@@ -32,6 +35,7 @@ interface BookingFormProps {
 const equipmentCategories = ['Camera Equipment', 'Audio Equipment']
 
 const BookingForm = (props: BookingFormProps) => {
+  const { currentUser } = useAuth()
   const equipmentsByCategory = equipmentCategories.map(() => [])
 
   const onEquipmentSave = (index, equipmentIds) => {
@@ -39,16 +43,30 @@ const BookingForm = (props: BookingFormProps) => {
     console.log(equipmentsByCategory)
   }
 
+  const [startDateChosen, setStartDateChosen] = useState(null)
+  const [endDateChosen, setEndDateChosen] = useState(null)
+
+  const handleStartDateChange = (e) => {
+    setStartDateChosen(e.target.value)
+  }
+
+  const handleEndDateChange = (e) => {
+    setEndDateChosen(e.target.value)
+  }
+
   const onSubmit = (data: FormBooking) => {
     const dataWithEquipments: UpdateBookingInput = {
       ...data,
       equipments: equipmentsByCategory.flat(),
+      userId: currentUser?.id,
     }
     props.onSave(dataWithEquipments, props?.booking?.id)
   }
 
+  const theme = useTheme()
+
   return (
-    <div className="rw-form-wrapper">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <Form<FormBooking> onSubmit={onSubmit} error={props.error}>
         <FormError
           error={props.error}
@@ -62,7 +80,7 @@ const BookingForm = (props: BookingFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Start time
+          <Typography>Checkout Date</Typography>
         </Label>
 
         <DatetimeLocalField
@@ -70,7 +88,12 @@ const BookingForm = (props: BookingFormProps) => {
           defaultValue={formatDatetime(props.booking?.startTime)}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
+          style={{ fontSize: 15 }}
+          validation={{
+            required: true,
+            validate: (value) => new Date(value) > new Date(),
+          }}
+          onChange={handleStartDateChange}
         />
 
         <FieldError name="startTime" className="rw-field-error" />
@@ -80,7 +103,7 @@ const BookingForm = (props: BookingFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          End time
+          <Typography>Return Date</Typography>
         </Label>
 
         <DatetimeLocalField
@@ -88,41 +111,31 @@ const BookingForm = (props: BookingFormProps) => {
           defaultValue={formatDatetime(props.booking?.endTime)}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
+          style={{ fontSize: 15 }}
+          validation={{
+            required: true,
+            validate: (value) =>
+              new Date(value) > new Date(startDateChosen) &&
+              new Date(value) > new Date(),
+          }}
+          onChange={handleEndDateChange}
         />
 
         <FieldError name="endTime" className="rw-field-error" />
-
-        <Label
-          name="userId"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          User id
-        </Label>
-
-        <NumberField
-          name="userId"
-          defaultValue={props.booking?.userId}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
-        />
-
-        <FieldError name="userId" className="rw-field-error" />
 
         <Label
           name="producerName"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Producer name
+          <Typography>Producer's Name</Typography>
         </Label>
 
         <TextField
           name="producerName"
           defaultValue={props.booking?.producerName}
           className="rw-input"
+          style={{ fontSize: 15 }}
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         />
@@ -134,15 +147,16 @@ const BookingForm = (props: BookingFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Producer email
+          <Typography>Producer's E-mail</Typography>
         </Label>
 
         <TextField
           name="producerEmail"
           defaultValue={props.booking?.producerEmail}
+          style={{ fontSize: 15 }}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
+          validation={{ required: true, pattern: /^[^@]+@[^.]+\..+$/ }}
         />
 
         <FieldError name="producerEmail" className="rw-field-error" />
@@ -152,12 +166,13 @@ const BookingForm = (props: BookingFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Director name
+          <Typography>Director's Name</Typography>
         </Label>
 
         <TextField
           name="directorName"
           defaultValue={props.booking?.directorName}
+          style={{ fontSize: 15 }}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
@@ -170,12 +185,13 @@ const BookingForm = (props: BookingFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Project name
+          <Typography>Project Name</Typography>
         </Label>
 
         <TextField
           name="projectName"
           defaultValue={props.booking?.projectName}
+          style={{ fontSize: 15 }}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
@@ -183,44 +199,48 @@ const BookingForm = (props: BookingFormProps) => {
 
         <FieldError name="projectName" className="rw-field-error" />
 
+        {startDateChosen &&
+          endDateChosen &&
+          equipmentCategories.map((category, index) => (
+            <Box key={index} sx={{ mt: 2 }}>
+              <Typography variant="h6">{category}</Typography>
+              <EquipmentAvailableByCategoryCell
+                shootStartTime={startDateChosen}
+                shootEndTime={endDateChosen}
+                category={category}
+                categoryIndex={index}
+                key={index}
+                onSave={onEquipmentSave}
+              />
+            </Box>
+          ))}
+
         <Label
           name="extraComments"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Extra comments
+          <Typography>Any extra questions, comments, or concerns?</Typography>
         </Label>
 
-        <TextField
+        <TextAreaField
           name="extraComments"
           defaultValue={props.booking?.extraComments}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
+          rows={5}
+          style={{ fontSize: 15 }}
         />
 
         <FieldError name="extraComments" className="rw-field-error" />
 
-        {equipmentCategories.map((category, index) => (
-          <>
-            <Typography>{category}</Typography>
-            <EquipmentAvailableByCategoryCell
-              shootStartTime={props.booking?.startTime}
-              shootEndTime={props.booking?.endTime}
-              category={category}
-              categoryIndex={index}
-              key={index}
-              onSave={onEquipmentSave}
-            />
-          </>
-        ))}
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save
           </Submit>
         </div>
       </Form>
-    </div>
+    </Box>
   )
 }
 

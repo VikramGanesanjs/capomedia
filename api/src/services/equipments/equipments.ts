@@ -51,7 +51,10 @@ export const deleteEquipment: MutationResolvers['deleteEquipment'] = ({
 }
 
 export const Equipment: EquipmentRelationResolvers = {
-  bookings: (_obj, { root }) => {
-    return db.equipment.findUnique({ where: { id: root?.id } }).bookings()
+  bookings: async (_obj, { root }) => {
+    return db.bookingsOnEquipments.findMany({
+      where: { equipmentId: root?.id },
+      include: { booking: true },
+    })
   },
 }

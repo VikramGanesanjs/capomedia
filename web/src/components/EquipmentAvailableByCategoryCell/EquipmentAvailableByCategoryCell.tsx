@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 import { FormGroup, FormControlLabel, Checkbox } from '@mui/material'
 import type {
+  Booking,
+  BookingEquipment,
   FindEquipmentByCategoryQuery,
   FindEquipmentByCategoryQueryVariables,
 } from 'types/graphql'
@@ -16,7 +18,12 @@ export const QUERY = gql`
       description
       category
       bookings {
-        id
+        booking {
+          startTime
+          endTime
+          id
+          projectName
+        }
       }
     }
   }
@@ -38,19 +45,50 @@ export const Failure = ({
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-const checkAvailability = (bookings, shootStartTime, shootEndTime) => {
-  const reversedBookings = bookings.reverse()
+const checkAvailability = (
+  bookings: BookingEquipment[],
+  shootStartTime,
+  shootEndTime
+): [boolean, Booking?] => {
+  if (bookings.length === 0) {
+    return [true, null]
+  }
+  const reversedBookings = [...bookings].reverse()
+
   for (const booking of reversedBookings) {
-    if (booking.startTime < new Date()) {
-      return true
-    } else if (
-      booking.startTime < shootStartTime ||
-      booking.endTime > shootEndTime
+    const existingStartTimeEarlier =
+      new Date(booking.booking.startTime) < new Date(shootStartTime)
+    const existingEndTimeEarlier =
+      new Date(booking.booking.endTime) < new Date(shootEndTime)
+
+    const existingStartEarlierProposedEnd =
+      new Date(booking.booking.startTime) < new Date(shootEndTime)
+    const proposedStartEarlierExistingEnd =
+      new Date(shootStartTime) < new Date(booking.booking.endTime)
+
+    const existingEnvelopsProposed =
+      existingStartTimeEarlier && !existingEndTimeEarlier
+    const proposedEnvelopsExisting =
+      !existingStartTimeEarlier && existingEndTimeEarlier
+    const existingBeforeProposedConflict =
+      existingStartTimeEarlier &&
+      existingEndTimeEarlier &&
+      proposedStartEarlierExistingEnd
+    const proposedBeforeExistingConflict =
+      !existingStartTimeEarlier &&
+      !existingEndTimeEarlier &&
+      existingStartEarlierProposedEnd
+
+    if (
+      existingEnvelopsProposed ||
+      proposedEnvelopsExisting ||
+      existingBeforeProposedConflict ||
+      proposedBeforeExistingConflict
     ) {
-      return false
+      return [false, booking.booking]
     }
   }
-  return true
+  return [true, null]
 }
 
 interface SuccessProps {
@@ -74,38 +112,43 @@ export const Success = ({
   SuccessProps) => {
   const [equipmentIds, setEquipmentIds] = useState([])
 
+  const handleCheckboxChange = (e, equipment) => {
+    if (e.target.checked) {
+      const copy = [...equipmentIds]
+      copy.push({
+        equipmentId: equipment.id,
+        equipmentName: equipment.name,
+        equipmentCategory: equipment.category,
+      })
+      console.log(copy)
+      setEquipmentIds(copy)
+      onSave(categoryIndex, copy)
+    } else {
+      console.log('went false')
+      const copy = equipmentIds.filter(
+        (obj) => obj.equipmentId !== equipment.id
+      )
+      console.log(copy)
+      setEquipmentIds(copy)
+      onSave(categoryIndex, copy)
+    }
+  }
+
   return (
     <FormGroup>
       {equipments.map((equipment, i) => {
-        if (
-          checkAvailability(equipment.bookings, shootStartTime, shootEndTime)
-        ) {
+        const [available, possibleConflictingBooking] = checkAvailability(
+          equipment.bookings,
+          shootStartTime,
+          shootEndTime
+        )
+        if (available) {
           return (
             <FormControlLabel
               key={i}
               control={
                 <Checkbox
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      const copy = [...equipmentIds]
-                      copy.push({
-                        equipmentId: equipment.id,
-                        equipmentName: equipment.name,
-                        equipmentCategory: equipment.category,
-                      })
-                      console.log(copy)
-                      setEquipmentIds(copy)
-                      onSave(categoryIndex, copy)
-                    } else {
-                      console.log('went false')
-                      const copy = equipmentIds.filter(
-                        (obj) => obj.equipmentId !== equipment.id
-                      )
-                      console.log(copy)
-                      setEquipmentIds(copy)
-                      onSave(categoryIndex, copy)
-                    }
-                  }}
+                  onChange={(e) => handleCheckboxChange(e, equipment)}
                 />
               }
               label={`${equipment.name}---${equipment.description}`}
@@ -117,7 +160,7 @@ export const Success = ({
               key={i}
               disabled
               control={<Checkbox />}
-              label={`${equipment.name} (not available on the date selected)`}
+              label={`${equipment.name} (not available on the date selected due to the project ${possibleConflictingBooking?.projectName} being booked)`}
             />
           )
         }

@@ -10,7 +10,7 @@ import { useAuth } from 'src/auth'
 
 import Logo from '../Logo/Logo'
 
-const MenuDrawer = () => {
+const MenuDrawer = ({ sx }) => {
   const [open, setOpen] = useState(false)
   const { isAuthenticated, hasRole, logOut } = useAuth()
 
@@ -20,7 +20,7 @@ const MenuDrawer = () => {
   }
 
   return (
-    <>
+    <Box sx={sx}>
       <Button onClick={() => setOpen(!open)}>
         <MenuIcon />
       </Button>
@@ -68,7 +68,7 @@ const MenuDrawer = () => {
           </Button>
         </Box>
       </Drawer>
-    </>
+    </Box>
   )
 }
 

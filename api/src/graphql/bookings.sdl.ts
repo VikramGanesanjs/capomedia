@@ -20,9 +20,10 @@ export const schema = gql`
   }
 
   type BookingEquipment {
-    id: Int!
+    bookingId: Int!
     booking: Booking!
     equipment: Equipment!
+    equipmentId: Int!
   }
   input BookingEquipmentInput {
     equipmentId: Int!
