@@ -19,7 +19,7 @@ const Routes = () => {
 
   return (
     <Router useAuth={useAuth}>
-      <Set wrap={ScaffoldLayout} title="Bookings" titleTo="bookings" buttonLabel="New Booking" buttonTo="newBooking">
+      <Set wrap={ScaffoldLayout} title="Bookings" titleTo="bookings" buttonLabel="New Booking" buttonTo="checkout">
         <Route path="/bookings/{id:Int}/edit" page={BookingEditBookingPage} name="editBooking" />
         <Route path="/bookings/{id:Int}" page={BookingBookingPage} name="booking" />
         <Route path="/bookings" page={BookingBookingsPage} name="bookings" />
@@ -46,19 +46,24 @@ const Routes = () => {
         </>
       )}
 
-      <Route path="/admin" page={AdminPage} name="admin" />
       <Route path="/theater" page={TheaterPage} name="theater" />
       <Set wrap={HomeLayout}>
-        <Route path="/bookings/new" page={BookingNewBookingPage} name="newBooking" />
         <Route path="/" page={HomePage} name="home" />
         <Route path="/about" page={AboutPage} name="about" />
+
         <Route path="/contact" page={ContactPage} name="contact" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
         <Private unauthenticated="login">
-          <Route path="/checkout" page={CheckoutPage} name="checkout" />
+          {hasRole('admin') && (
+            <>
+              <Route path="/admin" page={AdminPage} name="admin" />
+              <Route path="/booking-approval" page={BookingApprovalPage} name="bookingApproval" />
+            </>
+          )}
+          <Route path="/checkout" page={BookingNewBookingPage} name="checkout" />
         </Private>
       </Set>
       <Route notfound page={NotFoundPage} />

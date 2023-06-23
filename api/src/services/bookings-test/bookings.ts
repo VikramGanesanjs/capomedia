@@ -6,6 +6,8 @@ import type {
 
 import { db } from 'src/lib/db'
 
+import { equipment } from '../equipments/equipments'
+
 export const bookings: QueryResolvers['bookings'] = () => {
   return db.booking.findMany()
 }
@@ -13,6 +15,14 @@ export const bookings: QueryResolvers['bookings'] = () => {
 export const booking: QueryResolvers['booking'] = ({ id }) => {
   return db.booking.findUnique({
     where: { id },
+  })
+}
+
+export const pendingBookings: QueryResolvers['pendingBookings'] = () => {
+  return db.booking.findMany({
+    where: {
+      approval: 'Pending',
+    },
   })
 }
 
@@ -52,25 +62,44 @@ export const createBooking: MutationResolvers['createBooking'] = ({
     },
   })
 
-  // send email with sendGrid
+  const arrayOfEquipmentNames = equipments.map(
+    (equipment) => equipment.equipmentName
+  )
 
-  // const sgMail = require('@sendgrid/mail')
-  // sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-  // const msg = {
-  //   to: producerEmail, // Change to your recipient
-  //   from: 'vkganesan@icloud.com', // Change to your verified sender
-  //   subject: 'Sending with SendGrid is Fun',
-  //   text: 'and easy to do anywhere, even with Node.js',
-  //   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-  // }
-  // sgMail
-  //   .send(msg)
-  //   .then(() => {
-  //     console.log('Email sent')
-  //   })
-  //   .catch((error) => {
-  //     console.error(error)
-  //   })
+  let htmlString = '<p>'
+
+  arrayOfEquipmentNames.forEach((equipmentName) => {
+    htmlString += `<br>${equipmentName}`
+  })
+
+  htmlString += '</p>'
+
+  const sgMail = require('@sendgrid/mail')
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  const msg = {
+    to: producerEmail, // Change to your recipient
+    from: 'vkganesan@icloud.com', // Change to your verified sender
+    subject: `Your Equipment Checkout Details for project ${projectName}`,
+    html: `
+      <div>
+        <h1>
+          Equipment Checked Out
+        </h1>
+        <h2>Your equipment order is still pending approval, we will send you another email when it is approved!</h2>
+        ${htmlString}
+
+      </div>
+
+    `,
+  }
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
   return booking
 }
 

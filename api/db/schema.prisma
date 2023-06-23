@@ -42,6 +42,7 @@ model Booking {
   directorName  String
   projectName   String
   extraComments String
+  approval      String                 @default("Pending")
 }
 
 model BookingsOnEquipments {

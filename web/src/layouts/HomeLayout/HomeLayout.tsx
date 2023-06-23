@@ -112,7 +112,9 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
 
         {isAuthenticated && (
           <Typography sx={{ display: { xs: 'none', md: 'block' } }}>{`Hello ${
-            currentUser.name.split(' ')[0]
+            currentUser.name.indexOf(' ') >= 0
+              ? currentUser.name.split(' ')[0]
+              : currentUser.name
           }!`}</Typography>
         )}
         <Toaster />

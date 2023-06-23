@@ -18,6 +18,11 @@ export const QUERY = gql`
       directorName
       projectName
       extraComments
+      equipments {
+        equipment {
+          name
+        }
+      }
     }
   }
 `
@@ -28,7 +33,7 @@ export const Empty = () => {
   return (
     <div className="rw-text-center">
       {'No bookings yet. '}
-      <Link to={routes.newBooking()} className="rw-link">
+      <Link to={routes.checkout()} className="rw-link">
         {'Create one?'}
       </Link>
     </div>

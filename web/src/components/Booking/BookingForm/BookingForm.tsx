@@ -1,6 +1,13 @@
 import { useState } from 'react'
 
-import { Typography, Box, Divider, useTheme } from '@mui/material'
+import {
+  Typography,
+  Box,
+  useTheme,
+  Checkbox,
+  FormControlLabel,
+  Button,
+} from '@mui/material'
 import type { EditBookingById, UpdateBookingInput } from 'types/graphql'
 
 import {
@@ -45,6 +52,11 @@ const BookingForm = (props: BookingFormProps) => {
 
   const [startDateChosen, setStartDateChosen] = useState(null)
   const [endDateChosen, setEndDateChosen] = useState(null)
+  const [agree, setAgree] = useState(false)
+
+  const handleAgree = (e) => {
+    setAgree(e.target.checked)
+  }
 
   const handleStartDateChange = (e) => {
     setStartDateChosen(e.target.value)
@@ -202,7 +214,7 @@ const BookingForm = (props: BookingFormProps) => {
         {startDateChosen &&
           endDateChosen &&
           equipmentCategories.map((category, index) => (
-            <Box key={index} sx={{ mt: 2 }}>
+            <Box key={index} sx={{ mt: 4 }}>
               <Typography variant="h6">{category}</Typography>
               <EquipmentAvailableByCategoryCell
                 shootStartTime={startDateChosen}
@@ -234,9 +246,28 @@ const BookingForm = (props: BookingFormProps) => {
 
         <FieldError name="extraComments" className="rw-field-error" />
 
+        <Typography variant="h6" sx={{ mt: 4 }}>
+          By checking the box below, you are certifying that all of the above
+          equipment will be used only for CAPOmedia approved projects and will
+          be returned on the selected return date. Your equipment is not secured
+          until the producer receives an approval email notification. Report any
+          equipment malfunction or destruction to Mr. Landino immediately.
+          Please contact any of the CAPOmedia Season 17 Producers with any
+          questions or concerns.
+        </Typography>
+        <FormControlLabel
+          control={<Checkbox onChange={handleAgree} />}
+          label="Agree"
+        />
+
         <div className="rw-button-group">
-          <Submit disabled={props.loading} className="rw-button rw-button-blue">
-            Save
+          <Submit
+            disabled={props.loading || !agree}
+            style={{ backgroundColor: '#ffffff', border: 'none' }}
+          >
+            <Button disabled={props.loading || !agree} variant="contained">
+              Submit
+            </Button>
           </Submit>
         </div>
       </Form>

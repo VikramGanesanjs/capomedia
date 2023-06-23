@@ -1,20 +1,114 @@
-import { Link, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
+import { Box, Button, Grid, Paper, Typography } from '@mui/material'
+
+import { routes, navigate } from '@redwoodjs/router'
+import { useQuery } from '@redwoodjs/web'
+
+const GridItem = ({ children }) => {
+  return (
+    <Grid
+      item
+      xs={12}
+      md={6}
+      lg={4}
+      sx={{
+        ':hover': {
+          transition: 'box-shadow 0.5s ease-in-out',
+          boxShadow: 4, // theme.shadows[20]
+        },
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          display: 'flex',
+          p: 2,
+          minHeight: { xs: '30vh', lg: '50vh' },
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 6,
+          flexDirection: 'column',
+        }}
+      >
+        {children}
+      </Paper>
+    </Grid>
+  )
+}
 
 const AdminPage = () => {
-  return (
-    <>
-      <MetaTags title="Admin" description="Admin page" />
+  const QUERY = gql`
+    query FindProjects {
+      bookings {
+        projectName
+        startTime
+        directorName
+        producerName
+      }
+    }
+  `
 
-      <h1>AdminPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/AdminPage/AdminPage.tsx</code>
-      </p>
-      <p>
-        My default route is named <code>admin</code>, link to me with `
-        <Link to={routes.admin()}>Admin</Link>`
-      </p>
-    </>
+  const { data, loading, error } = useQuery(QUERY, {
+    onCompleted: (data) => {
+      console.log(data)
+    },
+  })
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        p: 4,
+        gap: 4,
+      }}
+    >
+      <Typography variant="h4">Admin Dashboard</Typography>
+      <Grid container spacing={2}>
+        <GridItem>
+          <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
+            Add new equipment to the inventory system, edit current equipment
+            and create new equipment categories
+          </Typography>
+          <Button onClick={() => navigate(routes.equipments())}>
+            {' '}
+            Go to equipment manager
+          </Button>
+        </GridItem>
+        <GridItem>
+          <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
+            Approve or reject pending equipment bookings
+          </Typography>
+          <Button onClick={() => navigate(routes.bookingApproval())}>
+            {' '}
+            Go to booking manager
+          </Button>
+        </GridItem>
+        <GridItem>
+          <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
+            Projects currently in production:
+          </Typography>
+          {loading ? (
+            <Typography> Loading...</Typography>
+          ) : error ? (
+            <Typography>{error.message}</Typography>
+          ) : (
+            data.bookings.map((booking, i) => {
+              if (new Date(booking.startTime) > new Date()) {
+                return (
+                  <Typography key={i}>
+                    {`${booking.projectName} - Directed By ${booking.directorName} - Produced By ${booking.producerName}`}
+                  </Typography>
+                )
+              }
+            })
+          )}
+          <Button onClick={() => navigate(routes.bookings())}>
+            {' '}
+            View all bookings
+          </Button>
+        </GridItem>
+      </Grid>
+    </Box>
   )
 }
 

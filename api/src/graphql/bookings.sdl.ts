@@ -12,11 +12,13 @@ export const schema = gql`
     directorName: String!
     projectName: String!
     extraComments: String!
+    approval: String!
   }
 
   type Query {
     bookings: [Booking!]! @requireAuth
     booking(id: Int!): Booking @requireAuth
+    pendingBookings: [Booking]! @requireAuth
   }
 
   type BookingEquipment {
@@ -53,6 +55,7 @@ export const schema = gql`
     projectName: String
     extraComments: String
     equipments: [BookingEquipmentInput!]
+    approval: String
   }
 
   type Mutation {
