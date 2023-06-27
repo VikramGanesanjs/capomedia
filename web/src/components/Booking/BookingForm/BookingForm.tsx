@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Typography,
@@ -8,7 +8,11 @@ import {
   FormControlLabel,
   Button,
 } from '@mui/material'
-import type { EditBookingById, UpdateBookingInput } from 'types/graphql'
+import type {
+  BookingEquipmentInput,
+  EditBookingById,
+  UpdateBookingInput,
+} from 'types/graphql'
 
 import {
   Form,
@@ -34,26 +38,64 @@ type FormBooking = NonNullable<EditBookingById['booking']>
 
 interface BookingFormProps {
   booking?: EditBookingById['booking']
-  onSave: (data: UpdateBookingInput, id?: FormBooking['id']) => void
+  onSave: (
+    data: UpdateBookingInput,
+    id?: FormBooking['id'],
+    removalList?: number[]
+  ) => void
   error: RWGqlError
   loading: boolean
 }
 
-const equipmentCategories = ['Camera Equipment', 'Audio Equipment']
+const equipmentCategories = [
+  'Camera Equipment',
+  'Audio Equipment',
+  'Lighting Equipment',
+  'Miscellaneous',
+]
 
 const BookingForm = (props: BookingFormProps) => {
   const { currentUser } = useAuth()
-  const equipmentsByCategory = equipmentCategories.map(() => [])
+  const [equipmentsByCategory, setEquipmentsByCategory] = useState(
+    equipmentCategories.map(() => [])
+  )
+  const [initialEquipmentsByCategory, setInitialEquipmentsByCategory] =
+    useState(equipmentCategories.map(() => []))
 
-  const onEquipmentSave = (index, equipmentIds) => {
-    equipmentsByCategory[index] = equipmentIds
-    console.log(equipmentsByCategory)
+  const onEquipmentSave = (index, equipmentIds, defaultChecked) => {
+    if (defaultChecked) {
+      const copy = [...removalList]
+      copy.push(equipmentIds)
+      setRemovalList(copy)
+    } else {
+      const copy = [...equipmentsByCategory]
+      const commonElements = equipmentIds.filter((element) =>
+        removalList.includes(element)
+      )
+      if (commonElements.length > 0) {
+        const removalCopy = [...removalList]
+        removalCopy.filter((element) => !commonElements.includes(element))
+        setRemovalList(removalCopy)
+      }
+      copy[index] = equipmentIds
+      setEquipmentsByCategory(copy)
+      console.log(equipmentsByCategory, copy)
+    }
   }
 
-  const [startDateChosen, setStartDateChosen] = useState(null)
-  const [endDateChosen, setEndDateChosen] = useState(null)
+  const [startDateChosen, setStartDateChosen] = useState(
+    props.booking?.startTime ?? null
+  )
+
+  const [endDateChosen, setEndDateChosen] = useState(
+    props.booking?.endTime ?? null
+  )
   const [agree, setAgree] = useState(false)
 
+  const [initialCheckedAlreadyAdded, setInitialCheckedAlreadyAdded] =
+    useState(false)
+
+  const [removalList, setRemovalList] = useState([])
   const handleAgree = (e) => {
     setAgree(e.target.checked)
   }
@@ -67,13 +109,47 @@ const BookingForm = (props: BookingFormProps) => {
   }
 
   const onSubmit = (data: FormBooking) => {
+    const initial = [...initialEquipmentsByCategory]
+      .flat()
+      .filter((equipment) => !removalList.includes(equipment.equipmentId))
+    const copy = [...new Set([...equipmentsByCategory].flat().concat(initial))]
+
+    copy.filter((equipment) => !removalList.includes(equipment.equipmentId))
+    copy.filter((equipment) => typeof equipment === 'object')
+    console.log(copy)
     const dataWithEquipments: UpdateBookingInput = {
       ...data,
-      equipments: equipmentsByCategory.flat(),
+      equipments: copy,
       userId: currentUser?.id,
     }
-    props.onSave(dataWithEquipments, props?.booking?.id)
+    props.onSave(dataWithEquipments, props?.booking?.id, removalList)
   }
+
+  useEffect(() => {
+    if (!initialCheckedAlreadyAdded && props.booking?.equipments) {
+      console.log(equipmentsByCategory)
+      if (props.booking?.equipments) {
+        const copy = [...initialEquipmentsByCategory]
+        props.booking?.equipments.forEach((equipment) => {
+          const equipmentCasted: BookingEquipmentInput = {
+            equipmentCategory: equipment.equipment.category,
+            equipmentId: equipment.equipment.id,
+            equipmentName: equipment.equipment.name,
+          }
+          console.log(equipmentCasted)
+          copy[equipmentCategories.indexOf(equipment.equipment.category)].push(
+            equipmentCasted
+          )
+        })
+        setInitialEquipmentsByCategory(copy)
+        setInitialCheckedAlreadyAdded(true)
+      }
+    }
+  }, [
+    initialCheckedAlreadyAdded,
+    props.booking?.equipments,
+    equipmentsByCategory,
+  ])
 
   const theme = useTheme()
 
@@ -216,14 +292,17 @@ const BookingForm = (props: BookingFormProps) => {
           equipmentCategories.map((category, index) => (
             <Box key={index} sx={{ mt: 4 }}>
               <Typography variant="h6">{category}</Typography>
-              <EquipmentAvailableByCategoryCell
-                shootStartTime={startDateChosen}
-                shootEndTime={endDateChosen}
-                category={category}
-                categoryIndex={index}
-                key={index}
-                onSave={onEquipmentSave}
-              />
+              <Box sx={{ pl: 2 }}>
+                <EquipmentAvailableByCategoryCell
+                  shootStartTime={startDateChosen}
+                  shootEndTime={endDateChosen}
+                  category={category}
+                  categoryIndex={index}
+                  key={index}
+                  editBooking={props.booking}
+                  onSave={onEquipmentSave}
+                />
+              </Box>
             </Box>
           ))}
 

@@ -38,7 +38,7 @@ const GridItem = ({ children }) => {
 const AdminPage = () => {
   const QUERY = gql`
     query FindProjects {
-      bookings {
+      bookings: currentBookings {
         projectName
         startTime
         directorName

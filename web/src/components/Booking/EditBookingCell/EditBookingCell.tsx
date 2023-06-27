@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material'
 import type { EditBookingById, UpdateBookingInput } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
@@ -20,12 +21,24 @@ export const QUERY = gql`
       directorName
       projectName
       extraComments
+      equipments {
+        equipmentId
+        equipment {
+          id
+          name
+          category
+        }
+      }
     }
   }
 `
 const UPDATE_BOOKING_MUTATION = gql`
-  mutation UpdateBookingMutation($id: Int!, $input: UpdateBookingInput!) {
-    updateBooking(id: $id, input: $input) {
+  mutation UpdateBookingMutation(
+    $id: Int!
+    $input: UpdateBookingInput!
+    $removalList: [Int]
+  ) {
+    updateBooking(id: $id, input: $input, removalList: $removalList) {
       id
       startTime
       endTime
@@ -57,31 +70,32 @@ export const Success = ({ booking }: CellSuccessProps<EditBookingById>) => {
       onError: (error) => {
         toast.error(error.message)
       },
+      refetchQueries: [{ query: QUERY, variables: { id: booking.id } }],
+      awaitRefetchQueries: true,
     }
   )
 
   const onSave = (
     input: UpdateBookingInput,
-    id: EditBookingById['booking']['id']
+    id: EditBookingById['booking']['id'],
+    removalList: number[]
   ) => {
-    updateBooking({ variables: { id, input } })
+    updateBooking({ variables: { id, input, removalList } })
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit Booking {booking?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <BookingForm
-          booking={booking}
-          onSave={onSave}
-          error={error}
-          loading={loading}
-        />
-      </div>
-    </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Typography variant="h4">Edit Booking {booking?.projectName}</Typography>
+      <Typography variant="h6">
+        If not all of the equipment you initially checked out are showing up,
+        please refresh the page!
+      </Typography>
+      <BookingForm
+        booking={booking}
+        onSave={onSave}
+        error={error}
+        loading={loading}
+      />
+    </Box>
   )
 }

@@ -1,14 +1,24 @@
-import { Link, routes } from '@redwoodjs/router'
+import {
+  Box,
+  Button,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  useTheme,
+} from '@mui/material'
+import type {
+  DeleteEquipmentMutationVariables,
+  FindEquipments,
+} from 'types/graphql'
+
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Equipment/EquipmentsCell'
 import { timeTag, truncate } from 'src/lib/formatters'
-
-import type {
-  DeleteEquipmentMutationVariables,
-  FindEquipments,
-} from 'types/graphql'
 
 const DELETE_EQUIPMENT_MUTATION = gql`
   mutation DeleteEquipmentMutation($id: Int!) {
@@ -19,6 +29,8 @@ const DELETE_EQUIPMENT_MUTATION = gql`
 `
 
 const EquipmentsList = ({ equipments }: FindEquipments) => {
+  const theme = useTheme()
+
   const [deleteEquipment] = useMutation(DELETE_EQUIPMENT_MUTATION, {
     onCompleted: () => {
       toast.success('Equipment deleted')
@@ -40,57 +52,62 @@ const EquipmentsList = ({ equipments }: FindEquipments) => {
   }
 
   return (
-    <div className="rw-segment rw-table-wrapper-responsive">
-      <table className="rw-table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Created at</th>
-            <th>Category</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
+    <Box className="rw-segment rw-TableContainer-wrapper-responsive">
+      <TableContainer className="rw-TableContainer">
+        <TableHead>
+          <TableRow>
+            <TableCell>Id</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Created at</TableCell>
+            <TableCell>Category</TableCell>
+            <TableCell>&nbsp;</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {equipments.map((equipment) => (
-            <tr key={equipment.id}>
-              <td>{truncate(equipment.id)}</td>
-              <td>{truncate(equipment.name)}</td>
-              <td>{truncate(equipment.description)}</td>
-              <td>{timeTag(equipment.createdAt)}</td>
-              <td>{truncate(equipment.category)}</td>
-              <td>
-                <nav className="rw-table-actions">
-                  <Link
-                    to={routes.equipment({ id: equipment.id })}
+            <TableRow key={equipment.id}>
+              <TableCell>{truncate(equipment.id)}</TableCell>
+              <TableCell>{truncate(equipment.name)}</TableCell>
+              <TableCell>{truncate(equipment.description)}</TableCell>
+              <TableCell>{timeTag(equipment.createdAt)}</TableCell>
+              <TableCell>{truncate(equipment.category)}</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                  <Button
+                    variant="contained"
+                    onClick={() =>
+                      navigate(routes.equipment({ id: equipment.id }))
+                    }
                     title={'Show equipment ' + equipment.id + ' detail'}
-                    className="rw-button rw-button-small"
                   >
                     Show
-                  </Link>
-                  <Link
-                    to={routes.editEquipment({ id: equipment.id })}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ bgcolor: theme.palette.secondary.main }}
+                    onClick={() =>
+                      navigate(routes.editEquipment({ id: equipment.id }))
+                    }
                     title={'Edit equipment ' + equipment.id}
-                    className="rw-button rw-button-small rw-button-blue"
                   >
                     Edit
-                  </Link>
-                  <button
-                    type="button"
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ bgcolor: theme.palette.secondary.dark }}
                     title={'Delete equipment ' + equipment.id}
-                    className="rw-button rw-button-small rw-button-red"
                     onClick={() => onDeleteClick(equipment.id)}
                   >
                     Delete
-                  </button>
-                </nav>
-              </td>
-            </tr>
+                  </Button>
+                </Box>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </TableContainer>
+    </Box>
   )
 }
 

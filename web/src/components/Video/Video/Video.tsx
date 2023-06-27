@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useTheme } from '@mui/material'
 import ReactPlayer from 'react-player'
 import type { DeleteVideoMutationVariables, FindVideoById } from 'types/graphql'
 
@@ -36,6 +36,7 @@ interface Props {
 
 const Video = ({ video }: Props) => {
   const { hasRole } = useAuth()
+  const theme = useTheme()
 
   const [deleteVideo] = useMutation(DELETE_VIDEO_MUTATION, {
     onCompleted: () => {
@@ -87,7 +88,7 @@ const Video = ({ video }: Props) => {
             top: '3%',
           }}
         >
-          <MenuDrawer />
+          <MenuDrawer sx={{}} color={theme.palette.primary.light} />
         </Box>
         <Box
           sx={{

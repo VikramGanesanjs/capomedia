@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs, Typography, useTheme } from '@mui/material'
 
 import { MetaTags } from '@redwoodjs/web'
 
+import MenuDrawer from 'src/components/MenuDrawer/MenuDrawer'
 import VideoCategoryCell from 'src/components/VideoCategoryCell'
 
 interface TabPanelProps {
@@ -22,6 +23,7 @@ const TabPanel = ({ value, index, children }: TabPanelProps): JSX.Element => {
 
 const TheaterPage = () => {
   const [category, setCategory] = useState(0)
+  const theme = useTheme()
 
   const categories = [
     'Featured',
@@ -48,6 +50,10 @@ const TheaterPage = () => {
           m: 0,
         }}
       >
+        <MenuDrawer
+          sx={{ position: 'fixed', top: 10, right: 10 }}
+          color={theme.palette.primary.light}
+        />
         <Box
           sx={{
             display: 'flex',

@@ -5,11 +5,12 @@ import type {
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+import { logger } from 'src/lib/logger'
 
 import { equipment } from '../equipments/equipments'
 
 export const bookings: QueryResolvers['bookings'] = () => {
-  return db.booking.findMany()
+  return db.booking.findMany({ orderBy: { startTime: 'desc' } })
 }
 
 export const booking: QueryResolvers['booking'] = ({ id }) => {
@@ -26,6 +27,10 @@ export const pendingBookings: QueryResolvers['pendingBookings'] = () => {
   })
 }
 
+export const currentBookings: QueryResolvers['currentBookings'] = () => {
+  return db.booking.findMany({ where: { endTime: { gt: new Date() } } })
+}
+
 export const createBooking: MutationResolvers['createBooking'] = ({
   input,
 }) => {
@@ -40,6 +45,7 @@ export const createBooking: MutationResolvers['createBooking'] = ({
     projectName,
     extraComments,
   } = input
+  console.log(equipments)
   const booking = db.booking.create({
     data: {
       startTime,
@@ -103,13 +109,90 @@ export const createBooking: MutationResolvers['createBooking'] = ({
   return booking
 }
 
-export const updateBooking: MutationResolvers['updateBooking'] = ({
+export const updateBooking: MutationResolvers['updateBooking'] = async ({
   id,
   input,
+  removalList,
 }) => {
-  return db.booking.update({
-    data: input,
+  const existingBooking = await db.booking.findUnique({
     where: { id },
+    include: { equipments: { include: { equipment: true } } },
+  })
+  if (input.approval) {
+    const arrayOfEquipmentNames = existingBooking.equipments.map(
+      (equipment) => equipment.equipment.name
+    )
+
+    let htmlString = '<p>'
+
+    arrayOfEquipmentNames.forEach((equipmentName) => {
+      htmlString += `<br>${equipmentName}`
+    })
+
+    htmlString += '</p>'
+
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: input.producerEmail ?? existingBooking.producerEmail, // Change to your recipient
+      from: 'vkganesan@icloud.com', // Change to your verified sender
+      subject: `Your Equipment Checkout Request Has Been ${input.approval}`,
+      html: `
+
+        <div>
+        <h1>Your equipment checkout request has been ${input.approval}</h1>
+        <p>Contact Mr. Landino or any of the producers for more questions. </p>
+
+          <h2>
+            Equipment Checked Out:
+          </h2>
+          ${htmlString}
+        </div>
+
+      `,
+    }
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log('Email sent')
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  const { equipments, userId, ...rest } = input
+
+  logger.warn(removalList, 'Ids')
+  console.log(removalList)
+  return db.booking.update({
+    data: {
+      user: {
+        connect: { id: userId },
+      },
+      ...rest,
+      equipments: {
+        deleteMany: {
+          bookingId: id,
+          equipmentId: { in: removalList },
+        },
+        connectOrCreate: equipments.map((equipment) => ({
+          where: {
+            bookingId_equipmentId: {
+              bookingId: id,
+              equipmentId: equipment.equipmentId,
+            },
+          },
+          create: {
+            equipment: {
+              connect: { id: equipment.equipmentId },
+            },
+          },
+        })),
+      },
+    },
+    where: { id },
+    include: { equipments: true },
   })
 }
 

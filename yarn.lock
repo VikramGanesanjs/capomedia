@@ -20709,7 +20709,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.8.1, prop-types@npm:^15.0.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.0.0, prop-types@npm:^15.5.10, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -21155,6 +21155,17 @@ __metadata:
   version: 0.11.0
   resolution: "react-refresh@npm:0.11.0"
   checksum: cbb5616c7ba670bbd2f37ddadcdfefa66e727ea188e89733ccb8184d3b874631104b0bc016d5676a7ade4d9c79100b99b46b6ed10cd117ab5d1ddcbf8653a9f2
+  languageName: node
+  linkType: hard
+
+"react-reveal@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "react-reveal@npm:1.2.2"
+  dependencies:
+    prop-types: ^15.5.10
+  peerDependencies:
+    react: ^15.3.0 || ^16.0.0
+  checksum: 6bc548a7e7b416e62df061aaa8f51bc2944e50e7271398ee22af4a3224b59d9247518859753d64370131f69807a7ebb2320ff4b151c375e043995afb5004247d
   languageName: node
   linkType: hard
 
@@ -21908,6 +21919,7 @@ __metadata:
     "@redwoodjs/core": 5.0.6
     "@sendgrid/mail": ^7.7.0
     react-player: ^2.12.0
+    react-reveal: ^1.2.2
     typeface-notable: ^1.1.13
   languageName: unknown
   linkType: soft

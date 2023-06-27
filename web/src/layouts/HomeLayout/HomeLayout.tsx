@@ -33,92 +33,103 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          columnGap: 5,
+          px: 3,
+          pr: 4,
+          justifyContent: 'space-between',
           backgroundColor: theme.palette.primary.light,
         }}
       >
-        <Logo />
-        <Button
-          onClick={() => navigate(routes.home())}
+        <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'row',
+            gap: 2,
+            alignItems: 'center',
           }}
         >
-          <Typography
-            variant="h1"
-            color="#000000"
-            sx={{ display: { xs: 'none', xl: 'block' } }}
-          >
-            CAPOmedia
-          </Typography>
-        </Button>
-        <Button
-          onClick={() => navigate(routes.about())}
-          sx={{ display: { xs: 'none', xl: 'block' } }}
-          variant="contained"
-        >
-          About
-        </Button>
-        <Button
-          onClick={() => navigate(routes.theater())}
-          sx={{ display: { xs: 'none', xl: 'block' } }}
-          variant="contained"
-        >
-          Theater
-        </Button>
-        <Button
-          onClick={() => navigate(routes.contact())}
-          sx={{ display: { xs: 'none', xl: 'block' } }}
-          variant="contained"
-        >
-          Contact Us
-        </Button>
-        {isAuthenticated && (hasRole('student') || hasRole('admin')) && (
+          <Logo sx={{ display: 'block' }} />
           <Button
-            sx={{ display: { xs: 'none', xl: 'block' } }}
-            onClick={() => navigate(routes.checkout())}
-            variant="contained"
+            onClick={() => navigate(routes.home())}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
           >
-            Checkout
+            <Typography
+              variant="h1"
+              color="#000000"
+              sx={{ display: { xs: 'none', md: 'block' } }}
+            >
+              CAPOmedia
+            </Typography>
           </Button>
-        )}
-        {isAuthenticated && hasRole('admin') && (
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
           <Button
-            onClick={() => navigate(routes.admin())}
-            variant="contained"
-            sx={{ display: { xs: 'none', xl: 'block' } }}
+            onClick={() => navigate(routes.about())}
+            sx={{ display: { xs: 'none', lg: 'block' } }}
           >
-            Admin
+            About
           </Button>
-        )}
-        {isAuthenticated ? (
           <Button
-            onClick={logOut}
-            variant="contained"
-            sx={{ display: { xs: 'none', xl: 'block' } }}
+            onClick={() => navigate(routes.theater())}
+            sx={{ display: { xs: 'none', lg: 'block' } }}
           >
-            Logout
+            Theater
           </Button>
-        ) : (
           <Button
-            onClick={() => navigate(routes.login())}
-            variant="contained"
-            sx={{ display: { xs: 'none', xl: 'block' } }}
+            onClick={() => navigate(routes.contact())}
+            sx={{ display: { xs: 'none', lg: 'block' } }}
           >
-            Login
+            Contact Us
           </Button>
-        )}
+          {isAuthenticated && (hasRole('student') || hasRole('admin')) && (
+            <Button
+              sx={{ display: { xs: 'none', lg: 'block' } }}
+              onClick={() => navigate(routes.checkout())}
+            >
+              Checkout
+            </Button>
+          )}
+          {isAuthenticated && hasRole('admin') && (
+            <Button
+              onClick={() => navigate(routes.admin())}
+              sx={{ display: { xs: 'none', lg: 'block' } }}
+            >
+              Admin
+            </Button>
+          )}
+          {isAuthenticated ? (
+            <Button
+              onClick={logOut}
+              sx={{ display: { xs: 'none', lg: 'block' } }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              onClick={() => navigate(routes.login())}
+              sx={{ display: { xs: 'none', lg: 'block' } }}
+            >
+              Login
+            </Button>
+          )}
 
-        {isAuthenticated && (
-          <Typography sx={{ display: { xs: 'none', md: 'block' } }}>{`Hello ${
-            currentUser.name.indexOf(' ') >= 0
-              ? currentUser.name.split(' ')[0]
-              : currentUser.name
-          }!`}</Typography>
-        )}
-        <Toaster />
-        <MenuDrawer sx={{ display: { lg: 'block', xl: 'none' } }} />
+          {isAuthenticated && (
+            <Typography
+              sx={{ display: { xs: 'none', md: 'block' }, mt: 0.68 }}
+            >{`Hello ${
+              currentUser.name.indexOf(' ') >= 0
+                ? currentUser.name.split(' ')[0]
+                : currentUser.name
+            }!`}</Typography>
+          )}
+          <Toaster />
+          <MenuDrawer
+            color={theme.palette.primary.light}
+            sx={{ display: { md: 'block', lg: 'none' } }}
+          />
+        </Box>
       </Box>
 
       <Box
@@ -138,7 +149,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         <Divider
           sx={{
             height: 5,
-            width: '33vw',
+            width: '34vw',
             backgroundColor: theme.palette.secondary.main,
           }}
         />

@@ -10,7 +10,7 @@ import { useAuth } from 'src/auth'
 
 import Logo from '../Logo/Logo'
 
-const MenuDrawer = ({ sx }) => {
+const MenuDrawer = ({ sx, color }) => {
   const [open, setOpen] = useState(false)
   const { isAuthenticated, hasRole, logOut } = useAuth()
 
@@ -38,13 +38,13 @@ const MenuDrawer = ({ sx }) => {
           sx={{
             height: '100%',
             width: '100%',
-            bgcolor: '#000000',
+            bgcolor: color,
             display: 'flex',
             flexDirection: 'column',
           }}
         >
           <Button onClick={() => navigate(routes.home())}>
-            <Logo />
+            <Logo sx={{}} />
           </Button>
           <Button onClick={() => navigate(routes.about())}>About Us</Button>
           <Button onClick={() => navigate(routes.theater())}>Theater</Button>

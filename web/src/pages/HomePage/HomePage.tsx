@@ -1,8 +1,10 @@
-import { ArrowDownward } from '@mui/icons-material'
 import { Box, Button, Typography, useTheme } from '@mui/material'
 import ReactPlayer from 'react-player'
+import Fade from 'react-reveal/Fade'
+import Reveal from 'react-reveal/Reveal'
+import Zoom from 'react-reveal/Zoom'
 
-import { routes } from '@redwoodjs/router'
+import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import HomePageCard from 'src/components/HomePageCard/HomePageCard'
@@ -41,34 +43,92 @@ const HomePage = () => {
     <Box
       sx={{
         display: 'flex',
-        p: 2,
         bgcolor: '#ffffff',
         alignItems: 'center',
         flexDirection: 'column',
-        gap: 5,
-        backgroundImage: `url(${'web/public/assets/IMG_3155.JPG'})`,
+        gap: 0,
       }}
     >
       <MetaTags title="Home" description="Home page" />
-      <Typography
-        variant="h2"
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        Home of Capo.360 and tons of student created films!
-      </Typography>
-      <Typography variant="h4">Latest Episode:</Typography>
       <Box
         sx={{
-          boxShadow: `30px 30px ${theme.palette.secondary.dark}`,
+          backgroundImage: `url(${`https://i.imgur.com/vClnG36.jpg`})`,
+          p: 2,
+          m: 0,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          width: '100%',
+          alignItems: 'center',
+          gap: 4,
+          justifyContent: 'center',
         }}
       >
-        <Box
-          sx={{
-            boxShadow: `20px 20px ${theme.palette.secondary.main}`,
-          }}
-        >
+        <Fade left>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: 'center',
+              fontSize: { xs: 80, sm: 100, md: 120 },
+              color: '#ffffff',
+              backgroundColor: '#000000',
+            }}
+          >
+            CAPOmedia
+          </Typography>
+        </Fade>
+        <Fade left>
+          <Typography
+            variant="h2"
+            style={{
+              textAlign: 'center',
+              color: '#ffffff',
+              backgroundColor: '#000000',
+            }}
+          >
+            Home of Capo.360 and tons of student created films!
+          </Typography>
+        </Fade>
+        <Fade collapse bottom>
+          <Box
+            sx={{
+              border: '2px solid #ffffff',
+              ':hover': { border: '2px solid #000000', bgcolor: '#ffffff' },
+              bgcolor: '#000000',
+            }}
+          >
+            <Button
+              sx={{
+                bgcolor: '#000000',
+                color: '#ffffff',
+                ':hover': { bgcolor: '#ffffff', color: '#000000' },
+              }}
+              onClick={() => navigate(routes.about())}
+            >
+              <Typography variant="h2">Learn More</Typography>
+            </Button>
+          </Box>
+        </Fade>
+      </Box>
+      <Box
+        sx={{
+          width: '100%',
+          height: '100vh',
+          p: 2,
+          pt: 20,
+          gap: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: '#000000',
+          alignItems: 'center',
+        }}
+      >
+        <Fade left>
+          <Typography variant="h4">Latest Episode:</Typography>
+        </Fade>
+        <Fade collapse bottom>
           <ReactPlayer
             url="https://vimeo.com/823134357"
             controls={true}
@@ -79,44 +139,70 @@ const HomePage = () => {
               boxShadow: `10px 10px ${theme.palette.primary.main}`,
             }}
           />
-        </Box>
+        </Fade>
+        <Fade collapse bottom>
+          <Box
+            sx={{
+              border: `2px solid ${theme.palette.primary.main}`,
+              p: 2,
+              mt: 4,
+            }}
+          >
+            <Button onClick={() => navigate(routes.theater())}>
+              <Typography variant="h4" sx={{ fontSize: 20 }}>
+                Browse Our Theater
+              </Typography>
+            </Button>
+          </Box>
+        </Fade>
       </Box>
+
       <Box
         sx={{
-          display: 'flex',
-          width: '100%',
-          p: 4,
-          justifyContent: 'right',
-        }}
-      >
-        <Button variant="contained" onClick={() => window.scrollBy(0, 100)}>
-          <ArrowDownward />
-        </Button>
-      </Box>
-      <Box
-        sx={{
-          marginTop: '100px',
-          height: '90vh',
+          backgroundImage: `url(${`https://i.imgur.com/AhmHWkt.jpg`})`,
           p: 2,
+          m: 0,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
           display: 'flex',
           flexDirection: 'column',
+          height: '100vh',
+          width: '100%',
           alignItems: 'center',
-          gap: 5,
+          gap: 4,
+          justifyContent: 'center',
         }}
       >
-        <Typography variant="h1">MAKE IDEAS HAPPEN!</Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            gap: 5,
-          }}
-        >
-          {homePageCardContent.map((props) => (
-            <HomePageCard key={props.key} {...props} />
-          ))}
-        </Box>
+        <Fade left>
+          <Typography variant="h1" color="#ffffff">
+            Make Ideas Happen!
+          </Typography>
+        </Fade>
+        <Fade collapse bottom>
+          <Typography variant="h2" color="#ffffff">
+            Any Questions?
+          </Typography>
+        </Fade>
+        <Fade collapse bottom>
+          <Box
+            sx={{
+              border: '4px solid #000000',
+              ':hover': { border: '4px solid #ffffff', bgcolor: '#000000' },
+              bgcolor: '#ffffff',
+            }}
+          >
+            <Button
+              sx={{
+                bgcolor: '#ffffff',
+                color: '#000000',
+                ':hover': { bgcolor: '#000000', color: '#ffffff' },
+              }}
+              onClick={() => navigate(routes.contact())}
+            >
+              <Typography variant="h2">Contact Us</Typography>
+            </Button>
+          </Box>
+        </Fade>
       </Box>
     </Box>
   )

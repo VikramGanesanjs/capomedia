@@ -53,7 +53,7 @@ const theme = createTheme({
 })
 
 const App = () => (
-  <>
+  <div style={{ overflowX: 'hidden' }}>
     <FatalErrorBoundary page={FatalErrorPage}>
       <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
         <AuthProvider>
@@ -65,7 +65,7 @@ const App = () => (
         </AuthProvider>
       </RedwoodProvider>
     </FatalErrorBoundary>
-  </>
+  </div>
 )
 
 export default App

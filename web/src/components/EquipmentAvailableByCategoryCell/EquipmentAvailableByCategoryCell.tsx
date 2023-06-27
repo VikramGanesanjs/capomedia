@@ -30,7 +30,14 @@ export const QUERY = gql`
 `
 export const beforeQuery = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { shootStartTime, shootEndTime, onSave, categoryIndex, ...rest } = props
+  const {
+    shootStartTime,
+    shootEndTime,
+    onSave,
+    categoryIndex,
+    editBooking,
+    ...rest
+  } = props
 
   return { variables: rest, fetchPolicy: 'cache-and-network' }
 }
@@ -95,8 +102,13 @@ interface SuccessProps {
   equipments: FindEquipmentByCategoryQuery['equipments']
   shootStartTime: Date
   shootEndTime: Date
-  onSave: (categoryIndex: number, equipmentIds: number[]) => void
+  onSave: (
+    categoryIndex: number,
+    equipmentIds: number[],
+    defaultChecked: boolean
+  ) => void
   categoryIndex: number
+  editBooking: Booking
 }
 
 export const Success = ({
@@ -105,6 +117,7 @@ export const Success = ({
   shootEndTime,
   onSave,
   categoryIndex,
+  editBooking,
 }: CellSuccessProps<
   FindEquipmentByCategoryQuery,
   FindEquipmentByCategoryQueryVariables
@@ -112,25 +125,33 @@ export const Success = ({
   SuccessProps) => {
   const [equipmentIds, setEquipmentIds] = useState([])
 
-  const handleCheckboxChange = (e, equipment) => {
-    if (e.target.checked) {
-      const copy = [...equipmentIds]
-      copy.push({
-        equipmentId: equipment.id,
-        equipmentName: equipment.name,
-        equipmentCategory: equipment.category,
-      })
-      console.log(copy)
-      setEquipmentIds(copy)
-      onSave(categoryIndex, copy)
+  const handleCheckboxChange = (e, equipment, defaultChecked) => {
+    if (!defaultChecked) {
+      if (e.target.checked) {
+        const copy = [...equipmentIds]
+        copy.push({
+          equipmentId: equipment.id,
+          equipmentName: equipment.name,
+          equipmentCategory: equipment.category,
+        })
+        console.log(copy)
+        setEquipmentIds(copy)
+        onSave(categoryIndex, copy, defaultChecked)
+      } else {
+        console.log('went false')
+        const copy = equipmentIds.filter(
+          (obj) => obj.equipmentId !== equipment.id
+        )
+        console.log(copy)
+        setEquipmentIds(copy)
+        onSave(categoryIndex, copy, defaultChecked)
+      }
     } else {
-      console.log('went false')
-      const copy = equipmentIds.filter(
-        (obj) => obj.equipmentId !== equipment.id
-      )
-      console.log(copy)
-      setEquipmentIds(copy)
-      onSave(categoryIndex, copy)
+      if (!e.target.checked) {
+        onSave(categoryIndex, equipment.id, defaultChecked)
+      } else {
+        onSave(categoryIndex, [], false)
+      }
     }
   }
 
@@ -142,16 +163,33 @@ export const Success = ({
           shootStartTime,
           shootEndTime
         )
-        if (available) {
+        if (
+          editBooking &&
+          !available &&
+          possibleConflictingBooking?.id == editBooking.id
+        ) {
           return (
             <FormControlLabel
               key={i}
               control={
                 <Checkbox
-                  onChange={(e) => handleCheckboxChange(e, equipment)}
+                  onChange={(e) => handleCheckboxChange(e, equipment, true)}
+                  defaultChecked
                 />
               }
-              label={`${equipment.name}---${equipment.description}`}
+              label={`${equipment.name}   ${equipment.description}`}
+            />
+          )
+        } else if (available) {
+          return (
+            <FormControlLabel
+              key={i}
+              control={
+                <Checkbox
+                  onChange={(e) => handleCheckboxChange(e, equipment, false)}
+                />
+              }
+              label={`${equipment.name}   ${equipment.description}`}
             />
           )
         } else {

@@ -19,6 +19,7 @@ export const schema = gql`
     bookings: [Booking!]! @requireAuth
     booking(id: Int!): Booking @requireAuth
     pendingBookings: [Booking]! @requireAuth
+    currentBookings: [Booking]! @requireAuth
   }
 
   type BookingEquipment {
@@ -60,7 +61,11 @@ export const schema = gql`
 
   type Mutation {
     createBooking(input: CreateBookingInput!): Booking! @requireAuth
-    updateBooking(id: Int!, input: UpdateBookingInput!): Booking! @requireAuth
+    updateBooking(
+      id: Int!
+      input: UpdateBookingInput!
+      removalList: [Int]
+    ): Booking! @requireAuth
     deleteBooking(id: Int!): Booking! @requireAuth
   }
 `
