@@ -134,15 +134,12 @@ export const Success = ({
           equipmentName: equipment.name,
           equipmentCategory: equipment.category,
         })
-        console.log(copy)
         setEquipmentIds(copy)
         onSave(categoryIndex, copy, defaultChecked)
       } else {
-        console.log('went false')
         const copy = equipmentIds.filter(
           (obj) => obj.equipmentId !== equipment.id
         )
-        console.log(copy)
         setEquipmentIds(copy)
         onSave(categoryIndex, copy, defaultChecked)
       }

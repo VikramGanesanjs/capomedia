@@ -61,11 +61,6 @@ const Video = ({ video }: Props) => {
       deleteVideo({ variables: { id } })
     }
   }
-
-  useEffect(() => {
-    console.log(nextQuery.data)
-    console.log(nextQuery.error)
-  })
   if (!hasRole('admin')) {
     return (
       <Box

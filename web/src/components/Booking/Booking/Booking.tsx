@@ -1,13 +1,27 @@
-import { Link, routes, navigate } from '@redwoodjs/router'
-import { useMutation } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
+import { useState } from 'react'
 
-import { timeTag } from 'src/lib/formatters'
-
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
+import {
+  Box,
+  Button,
+  Collapse,
+  IconButton,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import type {
   DeleteBookingMutationVariables,
   FindBookingById,
 } from 'types/graphql'
+
+import { routes, navigate } from '@redwoodjs/router'
+import { useMutation } from '@redwoodjs/web'
+import { toast } from '@redwoodjs/web/toast'
+
+import { timeTag } from 'src/lib/formatters'
 
 const DELETE_BOOKING_MUTATION = gql`
   mutation DeleteBookingMutation($id: Int!) {
@@ -38,74 +52,108 @@ const Booking = ({ booking }: Props) => {
     }
   }
 
+  const [opened, setOpened] = useState(false)
   return (
     <>
-      <div className="rw-segment">
-        <header className="rw-segment-header">
-          <h2 className="rw-heading rw-heading-secondary">
-            Booking {booking.id} Detail
-          </h2>
-        </header>
-        <table className="rw-table">
-          <tbody>
-            <tr>
-              <th>Id</th>
-              <td>{booking.id}</td>
-            </tr>
-            <tr>
-              <th>Start time</th>
-              <td>{timeTag(booking.startTime)}</td>
-            </tr>
-            <tr>
-              <th>End time</th>
-              <td>{timeTag(booking.endTime)}</td>
-            </tr>
-            <tr>
-              <th>User id</th>
-              <td>{booking.userId}</td>
-            </tr>
-            <tr>
-              <th>Created at</th>
-              <td>{timeTag(booking.createdAt)}</td>
-            </tr>
-            <tr>
-              <th>Producer name</th>
-              <td>{booking.producerName}</td>
-            </tr>
-            <tr>
-              <th>Producer email</th>
-              <td>{booking.producerEmail}</td>
-            </tr>
-            <tr>
-              <th>Director name</th>
-              <td>{booking.directorName}</td>
-            </tr>
-            <tr>
-              <th>Project name</th>
-              <td>{booking.projectName}</td>
-            </tr>
-            <tr>
-              <th>Extra comments</th>
-              <td>{booking.extraComments}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <nav className="rw-button-group">
-        <Link
-          to={routes.editBooking({ id: booking.id })}
-          className="rw-button rw-button-blue"
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Typography variant="h4">
+          Booking {booking.projectName} Detail
+        </Typography>
+        <TableContainer>
+          <TableBody>
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>{booking.id}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Start time</TableCell>
+              <TableCell>{timeTag(booking.startTime)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>End time</TableCell>
+              <TableCell>{timeTag(booking.endTime)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>User id</TableCell>
+              <TableCell>{booking.userId}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Created at</TableCell>
+              <TableCell>{timeTag(booking.createdAt)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Producer name</TableCell>
+              <TableCell>{booking.producerName}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Producer email</TableCell>
+              <TableCell>{booking.producerEmail}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Director name</TableCell>
+              <TableCell>{booking.directorName}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Project name</TableCell>
+              <TableCell>{booking.projectName}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Extra comments</TableCell>
+              <TableCell>{booking.extraComments}</TableCell>
+            </TableRow>
+            <TableCell>Equipment Checked Out</TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpened(!opened)}
+            >
+              {opened ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            </IconButton>
+            <TableRow>
+              <TableRow>
+                <TableCell
+                  style={{ paddingBottom: 0, paddingTop: 0 }}
+                  colSpan={6}
+                >
+                  <Collapse in={opened} timeout="auto" unmountOnExit>
+                    <Box sx={{ margin: 1 }}>
+                      {booking.equipments.map((equipment, i) => {
+                        return (
+                          <Typography key={i} gutterBottom>
+                            {equipment.equipment.name}
+                          </Typography>
+                        )
+                      })}
+                    </Box>
+                  </Collapse>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Approval</TableCell>
+                <TableCell>{booking.approval}</TableCell>
+              </TableRow>
+            </TableRow>
+          </TableBody>
+        </TableContainer>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 2,
+          justifyContent: 'center',
+        }}
+      >
+        <Button
+          onClick={() => navigate(routes.editBooking({ id: booking.id }))}
+          variant="contained"
         >
           Edit
-        </Link>
-        <button
-          type="button"
-          className="rw-button rw-button-red"
-          onClick={() => onDeleteClick(booking.id)}
-        >
+        </Button>
+        <Button onClick={() => onDeleteClick(booking.id)} variant="contained">
           Delete
-        </button>
-      </nav>
+        </Button>
+      </Box>
     </>
   )
 }

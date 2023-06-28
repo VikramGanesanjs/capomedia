@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { Box, Tab, Tabs, Typography, useTheme } from '@mui/material'
+import Fade from 'react-reveal/Fade'
 
 import { MetaTags } from '@redwoodjs/web'
 
@@ -62,9 +63,11 @@ const TheaterPage = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h1" color="white">
-            Theater
-          </Typography>
+          <Fade left>
+            <Typography variant="h1" color="white">
+              Theater
+            </Typography>
+          </Fade>
           <Box>
             <Tabs
               value={category}

@@ -40,7 +40,6 @@ const SignupPage = () => {
       password: data.password,
       roles: data.isStudent ? 'student' : 'user',
     })
-    console.log(data.isStudent ? 'student' : 'user')
     if (response.message) {
       toast(response.message)
     } else if (response.error) {

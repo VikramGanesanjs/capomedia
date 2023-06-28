@@ -17,6 +17,13 @@ export const QUERY = gql`
       directorName
       projectName
       extraComments
+      approval
+      equipments {
+        equipment {
+          name
+          id
+        }
+      }
     }
   }
 `

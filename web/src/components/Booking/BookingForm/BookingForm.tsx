@@ -79,7 +79,6 @@ const BookingForm = (props: BookingFormProps) => {
       }
       copy[index] = equipmentIds
       setEquipmentsByCategory(copy)
-      console.log(equipmentsByCategory, copy)
     }
   }
 
@@ -116,7 +115,6 @@ const BookingForm = (props: BookingFormProps) => {
 
     copy.filter((equipment) => !removalList.includes(equipment.equipmentId))
     copy.filter((equipment) => typeof equipment === 'object')
-    console.log(copy)
     const dataWithEquipments: UpdateBookingInput = {
       ...data,
       equipments: copy,
@@ -127,7 +125,6 @@ const BookingForm = (props: BookingFormProps) => {
 
   useEffect(() => {
     if (!initialCheckedAlreadyAdded && props.booking?.equipments) {
-      console.log(equipmentsByCategory)
       if (props.booking?.equipments) {
         const copy = [...initialEquipmentsByCategory]
         props.booking?.equipments.forEach((equipment) => {
@@ -136,7 +133,6 @@ const BookingForm = (props: BookingFormProps) => {
             equipmentId: equipment.equipment.id,
             equipmentName: equipment.equipment.name,
           }
-          console.log(equipmentCasted)
           copy[equipmentCategories.indexOf(equipment.equipment.category)].push(
             equipmentCasted
           )

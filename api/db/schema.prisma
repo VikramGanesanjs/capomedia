@@ -65,3 +65,11 @@ model Video {
   category    String
   featured    Boolean  @default(false)
 }
+
+model ContactFormResponse {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  email     String
+  message   String
+}

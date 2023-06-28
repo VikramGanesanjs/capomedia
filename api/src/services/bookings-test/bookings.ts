@@ -45,7 +45,6 @@ export const createBooking: MutationResolvers['createBooking'] = ({
     projectName,
     extraComments,
   } = input
-  console.log(equipments)
   const booking = db.booking.create({
     data: {
       startTime,
@@ -162,9 +161,6 @@ export const updateBooking: MutationResolvers['updateBooking'] = async ({
   }
 
   const { equipments, userId, ...rest } = input
-
-  logger.warn(removalList, 'Ids')
-  console.log(removalList)
   return db.booking.update({
     data: {
       user: {

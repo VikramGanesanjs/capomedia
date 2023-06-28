@@ -149,7 +149,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         <Divider
           sx={{
             height: 5,
-            width: '34vw',
+            width: '33vw',
             backgroundColor: theme.palette.secondary.main,
           }}
         />

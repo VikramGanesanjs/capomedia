@@ -3,6 +3,7 @@ import { Box, Button, Divider, Typography, useTheme } from '@mui/material'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
+import Logo from 'src/components/Logo/Logo'
 import MenuDrawer from 'src/components/MenuDrawer/MenuDrawer'
 
 type LayoutProps = {
@@ -41,17 +42,25 @@ const ScaffoldLayout = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          p: 2,
+          p: 1,
           bgcolor: theme.palette.primary.light,
         }}
       >
-        <h1 className="rw-heading rw-heading-primary">
-          <Link to={routes[titleTo]()} className="rw-link">
-            <Typography variant="h1" color="#000000">
-              {title}
-            </Typography>
-          </Link>
-        </h1>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Button onClick={() => navigate(routes.home())}>
+            <Logo sx={{}} />
+          </Button>
+          <Box sx={{ display: { sm: 'none', xl: 'block' } }}>
+            <h1 className="rw-heading rw-heading-primary">
+              <Link to={routes['home']()} className="rw-link">
+                <Typography variant="h1" color="#000000">
+                  CAPOmedia
+                </Typography>
+              </Link>
+            </h1>
+          </Box>
+        </Box>
+
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
           <Button onClick={() => navigate(routes[buttonTo]())}>
             <div className="rw-button-icon">+</div> {buttonLabel}

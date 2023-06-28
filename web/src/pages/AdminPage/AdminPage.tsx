@@ -107,6 +107,24 @@ const AdminPage = () => {
             View all bookings
           </Button>
         </GridItem>
+        <GridItem>
+          <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
+            View responses to the contact form
+          </Typography>
+          <Button onClick={() => navigate(routes.contactFormResponses())}>
+            {' '}
+            Go to Contact Response List
+          </Button>
+        </GridItem>
+        <GridItem>
+          <Typography variant="h6" component="h6" sx={{ textAlign: 'center' }}>
+            Add, edit, and delete videos from the video theater
+          </Typography>
+          <Button onClick={() => navigate(routes.videos())}>
+            {' '}
+            Go to Video Manager
+          </Button>
+        </GridItem>
       </Grid>
     </Box>
   )
