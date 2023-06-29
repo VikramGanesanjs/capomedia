@@ -58,10 +58,10 @@ const Routes = () => {
 
       <Route path="/theater" page={TheaterPage} name="theater" />
       <Set wrap={HomeLayout}>
-        <Route path="/" page={HomePage} name="home" prerender />
-        <Route path="/about" page={AboutPage} name="about" prerender />
+        <Route path="/" page={HomePage} name="home" />
+        <Route path="/about" page={AboutPage} name="about" />
 
-        <Route path="/contact" page={ContactPage} name="contact" prerender />
+        <Route path="/contact" page={ContactPage} name="contact" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
