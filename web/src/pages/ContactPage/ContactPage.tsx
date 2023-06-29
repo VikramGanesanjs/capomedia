@@ -75,7 +75,6 @@ const ContactPage = () => {
               mt: 8,
               borderRadius: 10,
               alignItems: 'center',
-              border: '2px solid #ffffff',
               justifyContent: 'center',
             }}
           >
@@ -183,9 +182,11 @@ const ContactPage = () => {
               fullWidth
               margin="normal"
             />
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
+            <Fade collapse bottom>
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
+            </Fade>
           </Box>
         </form>
       </Box>

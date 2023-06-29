@@ -21181,6 +21181,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-social-icons@npm:^5.15.0":
+  version: 5.15.0
+  resolution: "react-social-icons@npm:5.15.0"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: 15.x.x || 16.x.x || 17.x.x || 18.x.x
+  checksum: 7310cff1af39af3dea76643fa78a6e172c7d189a61f785b2c71122db42d898aef002c49cd9a9e05b19b78df6a7d9ac68d74001ad1e3283eff554fce29147b83b
+  languageName: node
+  linkType: hard
+
 "react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
@@ -21920,6 +21931,7 @@ __metadata:
     "@sendgrid/mail": ^7.7.0
     react-player: ^2.12.0
     react-reveal: ^1.2.2
+    react-social-icons: ^5.15.0
     typeface-notable: ^1.1.13
   languageName: unknown
   linkType: soft

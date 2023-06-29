@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import { navigate, routes } from '@redwoodjs/router'
 
 import { useAuth } from 'src/auth'
+import Footer from 'src/components/Footer/Footer'
 import Logo from 'src/components/Logo/Logo'
 import MenuDrawer from 'src/components/MenuDrawer/MenuDrawer'
 
@@ -149,7 +150,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         <Divider
           sx={{
             height: 5,
-            width: '33vw',
+            width: '34vw',
             backgroundColor: theme.palette.secondary.main,
           }}
         />
@@ -162,6 +163,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         />
       </Box>
       {children}
+      <Footer />
     </Box>
   )
 }

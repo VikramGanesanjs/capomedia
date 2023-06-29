@@ -48,7 +48,12 @@ const LoginPage = () => {
     <>
       <MetaTags title="Login" />
 
-      <main className="rw-main">
+      <main
+        className="rw-main"
+        style={{
+          height: '100vh',
+        }}
+      >
         <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">

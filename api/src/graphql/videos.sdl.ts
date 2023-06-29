@@ -13,7 +13,8 @@ export const schema = gql`
   type Query {
     videos: [Video!]! @skipAuth
     video(id: Int!): Video @skipAuth
-    videosByCategory(category: String!): [Video!]! @skipAuth
+    videosByCategory(category: String!): [Video]! @skipAuth
+    featuredVideos: [Video]! @skipAuth
   }
 
   input CreateVideoInput {
@@ -22,6 +23,7 @@ export const schema = gql`
     vimeoUrl: String!
     credits: String!
     category: String!
+    featured: Boolean!
   }
 
   input UpdateVideoInput {
@@ -29,7 +31,8 @@ export const schema = gql`
     description: String
     vimeoUrl: String
     credits: String
-    category: String!
+    category: String
+    featured: Boolean
   }
 
   type Mutation {

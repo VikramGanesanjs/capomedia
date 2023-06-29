@@ -5,6 +5,7 @@ import Fade from 'react-reveal/Fade'
 
 import { MetaTags } from '@redwoodjs/web'
 
+import FeaturedCell from 'src/components/FeaturedCell'
 import MenuDrawer from 'src/components/MenuDrawer/MenuDrawer'
 import VideoCategoryCell from 'src/components/VideoCategoryCell'
 
@@ -90,7 +91,11 @@ const TheaterPage = () => {
           </Box>
           {categories.map((categoryAtI, i) => (
             <TabPanel value={category} index={i} key={i}>
-              <VideoCategoryCell category={categoryAtI} />
+              {categoryAtI == 'Featured' ? (
+                <FeaturedCell />
+              ) : (
+                <VideoCategoryCell category={categoryAtI} />
+              )}
             </TabPanel>
           ))}
         </Box>

@@ -1,3 +1,6 @@
+import { useState } from 'react'
+
+import { Checkbox, FormControlLabel } from '@mui/material'
 import type { EditVideoById, UpdateVideoInput } from 'types/graphql'
 
 import {
@@ -21,8 +24,12 @@ interface VideoFormProps {
 
 const VideoForm = (props: VideoFormProps) => {
   const onSubmit = (data: FormVideo) => {
-    props.onSave(data, props?.video?.id)
+    const copy = { ...data }
+    copy['featured'] = featured
+    props.onSave(copy, props?.video?.id)
   }
+
+  const [featured, setFeatured] = useState(false)
 
   return (
     <div className="rw-form-wrapper">
@@ -122,6 +129,11 @@ const VideoForm = (props: VideoFormProps) => {
         />
 
         <FieldError name="category" className="rw-field-error" />
+
+        <FormControlLabel
+          control={<Checkbox onChange={(e) => setFeatured(e.target.checked)} />}
+          label="Would you like this video to be featured?"
+        />
 
         <div className="rw-button-group">
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

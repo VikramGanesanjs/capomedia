@@ -18,6 +18,10 @@ export const videosByCategory: QueryResolvers['videosByCategory'] = ({
   return db.video.findMany({ where: { category } })
 }
 
+export const featuredVideos: QueryResolvers['featuredVideos'] = () => {
+  return db.video.findMany({ where: { featured: true } })
+}
+
 export const createVideo: MutationResolvers['createVideo'] = ({ input }) => {
   return db.video.create({
     data: input,

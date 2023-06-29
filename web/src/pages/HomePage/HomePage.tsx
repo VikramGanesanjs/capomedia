@@ -129,16 +129,14 @@ const HomePage = () => {
           <Typography variant="h4">Latest Episode:</Typography>
         </Fade>
         <Fade collapse bottom>
-          <ReactPlayer
-            url="https://vimeo.com/823134357"
-            controls={true}
-            height="50vh"
-            width="50vw"
-            style={{
-              border: '5px solid #000000',
-              boxShadow: `10px 10px ${theme.palette.primary.main}`,
-            }}
-          />
+          <Button href="https://vimeo.com/823134357">
+            <ReactPlayer
+              url="https://vimeo.com/823134357"
+              controls={true}
+              height="50vh"
+              width="50vw"
+            />
+          </Button>
         </Fade>
         <Fade collapse bottom>
           <Box
@@ -174,7 +172,7 @@ const HomePage = () => {
         }}
       >
         <Fade left>
-          <Typography variant="h1" color="#ffffff">
+          <Typography variant="h1" color="#ffffff" textAlign="center">
             Make Ideas Happen!
           </Typography>
         </Fade>

@@ -78,15 +78,6 @@ const Video = ({ video }: Props) => {
       >
         <Box
           sx={{
-            position: 'absolute',
-            right: '3%',
-            top: '3%',
-          }}
-        >
-          <MenuDrawer sx={{}} color={theme.palette.primary.light} />
-        </Box>
-        <Box
-          sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -95,12 +86,30 @@ const Video = ({ video }: Props) => {
             p: 2,
           }}
         >
-          <Typography
-            sx={{ color: '#ffffff', textAlign: 'center' }}
-            variant="h1"
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+              p: 4,
+            }}
           >
-            {video.title}
-          </Typography>
+            <Typography
+              sx={{
+                color: '#ffffff',
+                textAlign: 'center',
+                fontSize: {
+                  xs: theme.typography.h2.fontSize,
+                  lg: theme.typography.h1.fontSize,
+                },
+              }}
+              variant="h1"
+            >
+              {video.title}
+            </Typography>
+            <MenuDrawer sx={{}} color={theme.palette.primary.light} />
+          </Box>
           <Box
             sx={{
               display: 'flex',
