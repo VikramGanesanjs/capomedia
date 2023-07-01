@@ -1,10 +1,11 @@
+import { Box, Typography } from '@mui/material'
+import type { CreateEquipmentInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import EquipmentForm from 'src/components/Equipment/EquipmentForm'
-
-import type { CreateEquipmentInput } from 'types/graphql'
 
 const CREATE_EQUIPMENT_MUTATION = gql`
   mutation CreateEquipmentMutation($input: CreateEquipmentInput!) {
@@ -33,14 +34,17 @@ const NewEquipment = () => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">New Equipment</h2>
-      </header>
-      <div className="rw-segment-main">
-        <EquipmentForm onSave={onSave} loading={loading} error={error} />
-      </div>
-    </div>
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+      }}
+    >
+      <Typography variant="h4">New Equipment</Typography>
+      <EquipmentForm onSave={onSave} loading={loading} error={error} />
+    </Box>
   )
 }
 

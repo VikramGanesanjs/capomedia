@@ -1,14 +1,8 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useEffect } from 'react'
 
-import {
-  Form,
-  Label,
-  TextField,
-  PasswordField,
-  Submit,
-  FieldError,
-} from '@redwoodjs/forms'
+import { Box, Typography, TextField, Button } from '@mui/material'
+
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast, Toaster } from '@redwoodjs/web/toast'
@@ -17,6 +11,9 @@ import { useAuth } from 'src/auth'
 
 const LoginPage = () => {
   const { isAuthenticated, logIn } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState({})
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -29,18 +26,45 @@ const LoginPage = () => {
     emailRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data: Record<string, string>) => {
-    const response = await logIn({
-      username: data.email,
-      password: data.password,
-    })
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
-    if (response.message) {
-      toast(response.message)
-    } else if (response.error) {
-      toast.error(response.error)
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    const formErrors = {}
+
+    if (email.length < 0) {
+      formErrors['email'] = 'Please enter an email address'
+    } else if (!validateEmail(email)) {
+      formErrors['email'] = 'Please enter a valid email address'
+    }
+
+    if (password.length < 0) {
+      formErrors['password'] = 'Please enter a password'
+    }
+
+    // Add more validation rules for password, if needed
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors)
+      toast.error('There was an error in your form')
+      console.log('errors')
     } else {
-      toast.success('Welcome back!')
+      console.log(email, password)
+      const response = await logIn({
+        username: email,
+        password: password,
+      })
+
+      if (response.message) {
+        toast(response.message)
+      } else if (response.error) {
+        toast.error(response.error)
+      } else {
+        toast.success('Welcome back!')
+      }
     }
   }
 
@@ -48,90 +72,77 @@ const LoginPage = () => {
     <>
       <MetaTags title="Login" />
 
-      <main
-        className="rw-main"
-        style={{
-          height: '100vh',
-        }}
-      >
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Login</h2>
-            </header>
+      <form onSubmit={(e) => onSubmit(e)}>
+        <Box
+          sx={{
+            height: '100vh',
+            display: 'flex',
+            p: 4,
+            flexDirection: 'column',
+            gap: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
+          <Typography variant="h1">Login</Typography>
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
+            <TextField
+              label="Email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!!errors.email}
+              helperText={errors.email}
+              fullWidth
+            />
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <Label
-                    name="email"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Email
-                  </Label>
-                  <TextField
-                    name="email"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={emailRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Email is required',
-                      },
-                    }}
-                  />
-
-                  <FieldError name="email" className="rw-field-error" />
-
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Password
-                  </Label>
-                  <PasswordField
-                    name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Password is required',
-                      },
-                    }}
-                  />
-
-                  <div className="rw-forgot-link">
-                    <Link
-                      to={routes.forgotPassword()}
-                      className="rw-forgot-link"
-                    >
-                      Forgot Password?
-                    </Link>
-                  </div>
-
-                  <FieldError name="password" className="rw-field-error" />
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Login</Submit>
-                  </div>
-                </Form>
-              </div>
-            </div>
-          </div>
-          <div className="rw-login-link">
-            <span>Don&apos;t have an account?</span>{' '}
-            <Link to={routes.signup()} className="rw-link">
-              Sign up!
-            </Link>
-          </div>
-        </div>
-      </main>
+            <TextField
+              label="Password"
+              variant="outlined"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+            }}
+          >
+            <Button type="submit" variant="contained" color="primary">
+              Login
+            </Button>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 4,
+              }}
+            >
+              <Typography>Don't have an account yet?</Typography>
+              <Button
+                variant="outlined"
+                onClick={() => navigate(routes.signup())}
+              >
+                Sign Up
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </form>
     </>
   )
 }

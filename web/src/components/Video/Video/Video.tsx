@@ -2,7 +2,16 @@ import { useEffect } from 'react'
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import { Box, Button, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Button,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import ReactPlayer from 'react-player'
 import type { DeleteVideoMutationVariables, FindVideoById } from 'types/graphql'
 
@@ -168,62 +177,60 @@ const Video = ({ video }: Props) => {
 
   return (
     <>
-      <div className="rw-segment">
-        <header className="rw-segment-header">
-          <h2 className="rw-heading rw-heading-secondary">
-            Video {video.id} Detail
-          </h2>
-        </header>
-        <table className="rw-table">
-          <tbody>
-            <tr>
-              <th>Id</th>
-              <td>{video.id}</td>
-            </tr>
-            <tr>
-              <th>Title</th>
-              <td>{video.title}</td>
-            </tr>
-            <tr>
-              <th>Description</th>
-              <td>{video.description}</td>
-            </tr>
-            <tr>
-              <th>Vimeo url</th>
-              <td>{video.vimeoUrl}</td>
-            </tr>
-            <tr>
-              <th>Created at</th>
-              <td>{timeTag(video.createdAt)}</td>
-            </tr>
-            <tr>
-              <th>Credits</th>
-              <td>{video.credits}</td>
-            </tr>
-          </tbody>
-        </table>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+        <Typography variant="h4">
+          {`Video ${video.title} Admin View`}
+        </Typography>
+        <TableContainer className="rw-table">
+          <TableBody>
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>{video.id}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Title</TableCell>
+              <TableCell>{video.title}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Description</TableCell>
+              <TableCell>{video.description}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Vimeo url</TableCell>
+              <TableCell>{video.vimeoUrl}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Created at</TableCell>
+              <TableCell>{timeTag(video.createdAt)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Credits</TableCell>
+              <TableCell>{video.credits}</TableCell>
+            </TableRow>
+          </TableBody>
+        </TableContainer>
         <ReactPlayer
           url={video.vimeoUrl}
           controls={true}
           height="50vh"
           width="50vw"
         />
-      </div>
-      <nav className="rw-button-group">
-        <Link
-          to={routes.editVideo({ id: video.id })}
+      </Box>
+      <Box className="rw-button-group">
+        <Button
+          onClick={() => navigate(routes.editVideo({ id: video.id }))}
           className="rw-button rw-button-blue"
         >
           Edit
-        </Link>
-        <button
+        </Button>
+        <Button
           type="button"
           className="rw-button rw-button-red"
           onClick={() => onDeleteClick(video.id)}
         >
           Delete
-        </button>
-      </nav>
+        </Button>
+      </Box>
     </>
   )
 }

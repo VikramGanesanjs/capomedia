@@ -1,6 +1,12 @@
 import { useState } from 'react'
 
-import { Checkbox, FormControlLabel } from '@mui/material'
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@mui/material'
 import type { EditVideoById, UpdateVideoInput } from 'types/graphql'
 
 import {
@@ -10,6 +16,7 @@ import {
   Label,
   TextField,
   Submit,
+  TextAreaField,
 } from '@redwoodjs/forms'
 import type { RWGqlError } from '@redwoodjs/forms'
 
@@ -32,7 +39,7 @@ const VideoForm = (props: VideoFormProps) => {
   const [featured, setFeatured] = useState(false)
 
   return (
-    <div className="rw-form-wrapper">
+    <Box className="rw-form-wrapper">
       <Form<FormVideo> onSubmit={onSubmit} error={props.error}>
         <FormError
           error={props.error}
@@ -46,7 +53,7 @@ const VideoForm = (props: VideoFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Title
+          <Typography>Title</Typography>
         </Label>
 
         <TextField
@@ -64,7 +71,7 @@ const VideoForm = (props: VideoFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Description
+          <Typography>Description</Typography>
         </Label>
 
         <TextField
@@ -81,7 +88,7 @@ const VideoForm = (props: VideoFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Vimeo url
+          <Typography>Vimeo url</Typography>
         </Label>
 
         <TextField
@@ -99,11 +106,12 @@ const VideoForm = (props: VideoFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Credits
+          <Typography>Credits</Typography>
         </Label>
 
-        <TextField
+        <TextAreaField
           name="credits"
+          rows={10}
           defaultValue={props.video?.credits}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
@@ -117,7 +125,7 @@ const VideoForm = (props: VideoFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Category
+          <Typography>Category</Typography>
         </Label>
 
         <TextField
@@ -134,14 +142,18 @@ const VideoForm = (props: VideoFormProps) => {
           control={<Checkbox onChange={(e) => setFeatured(e.target.checked)} />}
           label="Would you like this video to be featured?"
         />
-
-        <div className="rw-button-group">
-          <Submit disabled={props.loading} className="rw-button rw-button-blue">
-            Save
+        <Box sx={{ flexDirection: 'column', display: 'flex', gap: 2 }}>
+          <Submit
+            disabled={props.loading}
+            style={{ backgroundColor: '#ffffff', border: 'none' }}
+          >
+            <Button disabled={props.loading} variant="contained">
+              Save
+            </Button>
           </Submit>
-        </div>
+        </Box>
       </Form>
-    </div>
+    </Box>
   )
 }
 

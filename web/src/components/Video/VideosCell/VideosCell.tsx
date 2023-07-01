@@ -1,6 +1,7 @@
+import { Box, Typography, Link } from '@mui/material'
 import type { FindVideos } from 'types/graphql'
 
-import { Link, routes } from '@redwoodjs/router'
+import { navigate, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Videos from 'src/components/Video/Videos'
@@ -23,12 +24,17 @@ export const Loading = () => <div>Loading...</div>
 
 export const Empty = () => {
   return (
-    <div className="rw-text-center">
-      {'No videos yet. '}
-      <Link to={routes.newVideo()} className="rw-link">
-        {'Create one?'}
-      </Link>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 2,
+      }}
+    >
+      <Typography variant="h4">{'No videos yet. '}</Typography>
+    </Box>
   )
 }
 

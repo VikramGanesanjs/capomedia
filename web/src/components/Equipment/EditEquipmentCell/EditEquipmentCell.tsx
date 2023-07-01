@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material'
 import type { EditEquipmentById, UpdateEquipmentInput } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
@@ -58,20 +59,16 @@ export const Success = ({ equipment }: CellSuccessProps<EditEquipmentById>) => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit Equipment {equipment?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <EquipmentForm
-          equipment={equipment}
-          onSave={onSave}
-          error={error}
-          loading={loading}
-        />
-      </div>
-    </div>
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+      }}
+    >
+      <Typography variant="h4">Edit Equipment</Typography>
+      <EquipmentForm onSave={onSave} loading={loading} error={error} />
+    </Box>
   )
 }

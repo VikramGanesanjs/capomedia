@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material'
 import type { EditVideoById, UpdateVideoInput } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
@@ -59,20 +60,9 @@ export const Success = ({ video }: CellSuccessProps<EditVideoById>) => {
   }
 
   return (
-    <div className="rw-segment">
-      <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">
-          Edit Video {video?.id}
-        </h2>
-      </header>
-      <div className="rw-segment-main">
-        <VideoForm
-          video={video}
-          onSave={onSave}
-          error={error}
-          loading={loading}
-        />
-      </div>
-    </div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+      <Typography variant="h4">Edit Video</Typography>
+      <VideoForm onSave={onSave} loading={loading} error={error} />
+    </Box>
   )
 }

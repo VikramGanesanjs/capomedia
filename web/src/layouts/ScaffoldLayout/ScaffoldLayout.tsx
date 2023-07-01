@@ -3,6 +3,7 @@ import { Box, Button, Divider, Typography, useTheme } from '@mui/material'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
+import Footer from 'src/components/Footer/Footer'
 import Logo from 'src/components/Logo/Logo'
 import MenuDrawer from 'src/components/MenuDrawer/MenuDrawer'
 
@@ -50,7 +51,7 @@ const ScaffoldLayout = ({
           <Button onClick={() => navigate(routes.home())}>
             <Logo sx={{}} />
           </Button>
-          <Box sx={{ display: { sm: 'none', xl: 'block' } }}>
+          <Box sx={{ display: { xs: 'none', xl: 'block' } }}>
             <h1 className="rw-heading rw-heading-primary">
               <Link to={routes['home']()} className="rw-link">
                 <Typography variant="h1" color="#000000">
@@ -98,7 +99,10 @@ const ScaffoldLayout = ({
           }}
         />
       </Box>
-      <main className="rw-main">{children}</main>
+      <main style={{ minHeight: '100vh' }} className="rw-main">
+        {children}
+      </main>
+      <Footer />
     </Box>
   )
 }

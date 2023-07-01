@@ -1,17 +1,15 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useEffect } from 'react'
 
-import { Box } from '@mui/material'
-
 import {
-  Form,
-  Label,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
   TextField,
-  PasswordField,
-  FieldError,
-  Submit,
-  CheckboxField,
-} from '@redwoodjs/forms'
+  Typography,
+} from '@mui/material'
+
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast, Toaster } from '@redwoodjs/web/toast'
@@ -33,20 +31,50 @@ const SignupPage = () => {
     emailRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data: Record<string, string>) => {
-    const response = await signUp({
-      name: data.name,
-      username: data.email,
-      password: data.password,
-      roles: data.isStudent ? 'student' : 'user',
-    })
-    if (response.message) {
-      toast(response.message)
-    } else if (response.error) {
-      toast.error(response.error)
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isStudent, setIsStudent] = useState(false)
+  const [errors, setErrors] = useState({})
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    const formErrors = {}
+
+    if (fullName.trim() === '') {
+      formErrors.fullName = 'Please enter your full name'
+    }
+    if (email.trim() === '') {
+      formErrors.email = 'Please enter your email'
+    } else if (!validateEmail(email)) {
+      formErrors.email = 'Please enter a valid email address'
+    }
+
+    if (password.trim() === '') {
+      formErrors.password = 'Please enter your password'
+    }
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors)
     } else {
-      // user is signed in automatically
-      toast.success('Welcome!')
+      const response = await signUp({
+        name: fullName,
+        username: email,
+        password: password,
+        roles: isStudent ? 'student' : 'user',
+      })
+      if (response.message) {
+        toast(response.message)
+      } else if (response.error) {
+        toast.error(response.error)
+      } else {
+        toast.success('Welcome!')
+      }
     }
   }
 
@@ -54,122 +82,74 @@ const SignupPage = () => {
     <>
       <MetaTags title="Signup" />
 
-      <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Signup</h2>
-            </header>
+      <form onSubmit={(e) => onSubmit(e)}>
+        <Box
+          sx={{
+            height: '100vh',
+            display: 'flex',
+            p: 4,
+            flexDirection: 'column',
+            gap: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
+          <Typography variant="h1">Signup</Typography>
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <Label
-                    name="name"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Full Name
-                  </Label>
-                  <TextField
-                    name="name"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={emailRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Name is required',
-                      },
-                    }}
-                  />
-                  <FieldError name="name" className="rw-field-error" />
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
+            <TextField
+              label="Full Name"
+              variant="outlined"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              error={!!errors.fullName}
+              helperText={errors.fullName}
+              fullWidth
+            />
 
-                  <Label
-                    name="email"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Email
-                  </Label>
-                  <TextField
-                    name="email"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={emailRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Email is required',
-                      },
-                    }}
-                  />
-                  <FieldError name="email" className="rw-field-error" />
+            <TextField
+              label="Email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!!errors.email}
+              helperText={errors.email}
+              fullWidth
+            />
 
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Password
-                  </Label>
-                  <PasswordField
-                    name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Password is required',
-                      },
-                    }}
-                  />
-                  <FieldError name="password" className="rw-field-error" />
+            <TextField
+              label="Password"
+              variant="outlined"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+            />
 
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Label
-                      name="isStudent"
-                      className="rw-label"
-                      errorClassName="rw-label rw-label-error"
-                    >
-                      Are you a student in Capomedia?
-                    </Label>
-                    <CheckboxField
-                      name="isStudent"
-                      className="rw-input"
-                      errorClassName="rw-input rw-input-error"
-                      style={{
-                        height: 100,
-                        width: 100,
-                      }}
-                    />
-                  </Box>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isStudent}
+                  onChange={(e) => setIsStudent(e.target.checked)}
+                />
+              }
+              label="Are you a student in CAPOmedia?"
+            />
+          </Box>
 
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">
-                      Sign Up
-                    </Submit>
-                  </div>
-                </Form>
-              </div>
-            </div>
-          </div>
-          <div className="rw-login-link">
-            <span>Already have an account?</span>{' '}
-            <Link to={routes.login()} className="rw-link">
-              Log in!
-            </Link>
-          </div>
-        </div>
-      </main>
+          <Button type="submit" variant="contained" color="primary">
+            Sign Up
+          </Button>
+        </Box>
+      </form>
     </>
   )
 }

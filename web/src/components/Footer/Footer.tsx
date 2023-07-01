@@ -49,7 +49,7 @@ function SocialIcons() {
 
   return (
     <Box>
-      <Grid container direction="horizontal">
+      <Grid container>
         <Grid item xs>
           <Box p={1}>
             <SocialIcon

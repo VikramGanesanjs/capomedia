@@ -57,7 +57,7 @@ const ContactPage = () => {
       <MetaTags title="Contact Us" description="Contact page" />
       <Box
         sx={{
-          height: '100%',
+          height: '100vh',
           width: '97%',
           backgroundImage: `url(${`https://i.imgur.com/0eEbz4A.jpg`})`,
           p: 4,

@@ -162,7 +162,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           }}
         />
       </Box>
-      {children}
+      <main style={{ minHeight: '100vh' }}>{children}</main>
       <Footer />
     </Box>
   )

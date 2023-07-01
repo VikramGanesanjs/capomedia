@@ -1,6 +1,16 @@
+import {
+  Box,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+  Typography,
+} from '@mui/material'
 import type { DeleteVideoMutationVariables, FindVideos } from 'types/graphql'
 
-import { Link, routes } from '@redwoodjs/router'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -37,60 +47,57 @@ const VideosList = ({ videos }: FindVideos) => {
   }
 
   return (
-    <div className="rw-segment rw-table-wrapper-responsive">
-      <table className="rw-table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Vimeo url</th>
-            <th>Created at</th>
-            <th>Credits</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 4 }}>
+      <Typography variant="h4">Videos</Typography>
+      <TableContainer className="rw-table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Id</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Vimeo url</TableCell>
+            <TableCell>Created at</TableCell>
+            <TableCell>Credits</TableCell>
+            <TableCell>&nbsp;</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {videos.map((video) => (
-            <tr key={video.id}>
-              <td>{truncate(video.id)}</td>
-              <td>{truncate(video.title)}</td>
-              <td>{truncate(video.description)}</td>
-              <td>{truncate(video.vimeoUrl)}</td>
-              <td>{timeTag(video.createdAt)}</td>
-              <td>{truncate(video.credits)}</td>
-              <td>{truncate(video.category)}</td>
-              <td>
-                <nav className="rw-table-actions">
-                  <Link
-                    to={routes.video({ id: video.id })}
+            <TableRow key={video.id}>
+              <TableCell>{truncate(video.id)}</TableCell>
+              <TableCell>{truncate(video.title)}</TableCell>
+              <TableCell>{truncate(video.description)}</TableCell>
+              <TableCell>{truncate(video.vimeoUrl)}</TableCell>
+              <TableCell>{timeTag(video.createdAt)}</TableCell>
+              <TableCell>{truncate(video.credits)}</TableCell>
+              <TableCell>{truncate(video.category)}</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                  <Button
+                    onClick={() => navigate(routes.video({ id: video.id }))}
                     title={'Show video ' + video.id + ' detail'}
-                    className="rw-button rw-button-small"
                   >
                     Show
-                  </Link>
-                  <Link
-                    to={routes.editVideo({ id: video.id })}
+                  </Button>
+                  <Button
+                    onClick={() => navigate(routes.editVideo({ id: video.id }))}
                     title={'Edit video ' + video.id}
-                    className="rw-button rw-button-small rw-button-blue"
                   >
                     Edit
-                  </Link>
-                  <button
-                    type="button"
+                  </Button>
+                  <Button
                     title={'Delete video ' + video.id}
-                    className="rw-button rw-button-small rw-button-red"
                     onClick={() => onDeleteClick(video.id)}
                   >
                     Delete
-                  </button>
-                </nav>
-              </td>
-            </tr>
+                  </Button>
+                </Box>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </TableContainer>
+    </Box>
   )
 }
 

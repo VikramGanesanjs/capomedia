@@ -1,3 +1,6 @@
+import { Box, Button, Typography } from '@mui/material'
+import type { EditEquipmentById, UpdateEquipmentInput } from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -6,8 +9,6 @@ import {
   TextField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type { EditEquipmentById, UpdateEquipmentInput } from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormEquipment = NonNullable<EditEquipmentById['equipment']>
@@ -25,7 +26,7 @@ const EquipmentForm = (props: EquipmentFormProps) => {
   }
 
   return (
-    <div className="rw-form-wrapper">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <Form<FormEquipment> onSubmit={onSubmit} error={props.error}>
         <FormError
           error={props.error}
@@ -39,7 +40,7 @@ const EquipmentForm = (props: EquipmentFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Name
+          <Typography>Name</Typography>
         </Label>
 
         <TextField
@@ -57,7 +58,7 @@ const EquipmentForm = (props: EquipmentFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Description
+          <Typography>Description</Typography>
         </Label>
 
         <TextField
@@ -74,7 +75,7 @@ const EquipmentForm = (props: EquipmentFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Category
+          <Typography>Category</Typography>
         </Label>
 
         <TextField
@@ -88,12 +89,17 @@ const EquipmentForm = (props: EquipmentFormProps) => {
         <FieldError name="category" className="rw-field-error" />
 
         <div className="rw-button-group">
-          <Submit disabled={props.loading} className="rw-button rw-button-blue">
-            Save
+          <Submit
+            disabled={props.loading}
+            style={{ backgroundColor: '#ffffff', border: 'none' }}
+          >
+            <Button variant="contained" disabled={props.loading}>
+              Save
+            </Button>
           </Submit>
         </div>
       </Form>
-    </div>
+    </Box>
   )
 }
 

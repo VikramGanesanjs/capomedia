@@ -13,6 +13,13 @@ export const QUERY = gql`
       description
       createdAt
       category
+      bookings {
+        booking {
+          startTime
+          endTime
+          projectName
+        }
+      }
     }
   }
 `

@@ -1,9 +1,18 @@
+import {
+  Box,
+  Button,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import type {
   DeleteContactFormResponseMutationVariables,
   FindContactFormResponseById,
 } from 'types/graphql'
 
-import { Link, routes, navigate } from '@redwoodjs/router'
+import { Link, routes, Boxigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -29,7 +38,7 @@ const ContactFormResponse = ({ contactFormResponse }: Props) => {
     {
       onCompleted: () => {
         toast.success('ContactFormResponse deleted')
-        navigate(routes.contactFormResponses())
+        Boxigate(routes.contactFormResponses())
       },
       onError: (error) => {
         toast.error(error.message)
@@ -48,48 +57,46 @@ const ContactFormResponse = ({ contactFormResponse }: Props) => {
   }
 
   return (
-    <>
-      <div className="rw-segment">
-        <header className="rw-segment-header">
-          <h2 className="rw-heading rw-heading-secondary">
-            ContactFormResponse {contactFormResponse.id} Detail
-          </h2>
-        </header>
-        <table className="rw-table">
-          <tbody>
-            <tr>
-              <th>Id</th>
-              <td>{contactFormResponse.id}</td>
-            </tr>
-            <tr>
-              <th>Name</th>
-              <td>{contactFormResponse.name}</td>
-            </tr>
-            <tr>
-              <th>Created at</th>
-              <td>{timeTag(contactFormResponse.createdAt)}</td>
-            </tr>
-            <tr>
-              <th>Email</th>
-              <td>{contactFormResponse.email}</td>
-            </tr>
-            <tr>
-              <th>Message</th>
-              <td>{contactFormResponse.message}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <nav className="rw-button-group">
-        <button
-          type="button"
-          className="rw-button rw-button-red"
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <Typography variant="h4">
+          Contact Form Response {contactFormResponse.id} Detail
+        </Typography>
+
+        <TableContainer className="rw-table">
+          <TableBody>
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>{contactFormResponse.id}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>{contactFormResponse.name}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Created at</TableCell>
+              <TableCell>{timeTag(contactFormResponse.createdAt)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Email</TableCell>
+              <TableCell>{contactFormResponse.email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Message</TableCell>
+              <TableCell>{contactFormResponse.message}</TableCell>
+            </TableRow>
+          </TableBody>
+        </TableContainer>
+      </Box>
+      <Box>
+        <Button
+          variant="contained"
           onClick={() => onDeleteClick(contactFormResponse.id)}
         >
           Delete
-        </button>
-      </nav>
-    </>
+        </Button>
+      </Box>
+    </Box>
   )
 }
 

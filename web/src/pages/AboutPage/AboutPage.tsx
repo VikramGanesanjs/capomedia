@@ -47,7 +47,8 @@ const AboutPage = () => {
                 bgcolor="#000000"
                 sx={{
                   fontSize: {
-                    xs: 28,
+                    xs: 20,
+                    sm: 28,
                     lg: theme.typography.h2.fontSize,
                   },
                 }}
@@ -95,7 +96,8 @@ const AboutPage = () => {
                 color="white"
                 sx={{
                   fontSize: {
-                    xs: 28,
+                    xs: 20,
+                    sm: 28,
                     lg: theme.typography.h2.fontSize,
                   },
                 }}
@@ -145,7 +147,8 @@ const AboutPage = () => {
                 bgcolor="#000000"
                 sx={{
                   fontSize: {
-                    xs: 28,
+                    xs: 20,
+                    sm: 28,
                     lg: theme.typography.h2.fontSize,
                   },
                 }}

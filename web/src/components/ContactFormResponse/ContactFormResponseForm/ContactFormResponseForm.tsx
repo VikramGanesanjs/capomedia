@@ -1,3 +1,9 @@
+import { Box, Typography, Button } from '@mui/material'
+import type {
+  EditContactFormResponseById,
+  UpdateContactFormResponseInput,
+} from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -6,11 +12,6 @@ import {
   TextField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type {
-  EditContactFormResponseById,
-  UpdateContactFormResponseInput,
-} from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormContactFormResponse = NonNullable<
@@ -33,7 +34,7 @@ const ContactFormResponseForm = (props: ContactFormResponseFormProps) => {
   }
 
   return (
-    <div className="rw-form-wrapper">
+    <Box className="rw-form-wrapper">
       <Form<FormContactFormResponse> onSubmit={onSubmit} error={props.error}>
         <FormError
           error={props.error}
@@ -47,7 +48,7 @@ const ContactFormResponseForm = (props: ContactFormResponseFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Name
+          <Typography>Name</Typography>
         </Label>
 
         <TextField
@@ -65,7 +66,7 @@ const ContactFormResponseForm = (props: ContactFormResponseFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Email
+          <Typography>Email</Typography>
         </Label>
 
         <TextField
@@ -83,7 +84,7 @@ const ContactFormResponseForm = (props: ContactFormResponseFormProps) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Message
+          <Typography>Message</Typography>
         </Label>
 
         <TextField
@@ -96,13 +97,15 @@ const ContactFormResponseForm = (props: ContactFormResponseFormProps) => {
 
         <FieldError name="message" className="rw-field-error" />
 
-        <div className="rw-button-group">
-          <Submit disabled={props.loading} className="rw-button rw-button-blue">
-            Save
+        <Box className="rw-button-group">
+          <Submit disabled={props.loading}>
+            <Button disabled={props.loading} variant="contained">
+              Save
+            </Button>
           </Submit>
-        </div>
+        </Box>
       </Form>
-    </div>
+    </Box>
   )
 }
 

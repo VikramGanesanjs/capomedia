@@ -1,9 +1,18 @@
+import {
+  Box,
+  Button,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import type {
   DeleteContactFormResponseMutationVariables,
   FindContactFormResponses,
 } from 'types/graphql'
 
-import { Link, routes } from '@redwoodjs/router'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -49,58 +58,61 @@ const ContactFormResponsesList = ({
   }
 
   return (
-    <div className="rw-segment rw-table-wrapper-responsive">
-      <table className="rw-table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Created at</th>
-            <th>Email</th>
-            <th>Message</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
+    <Box>
+      <TableContainer>
+        <TableHead>
+          <TableRow>
+            <TableCell>Id</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Created at</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Message</TableCell>
+            <TableCell>&nbsp;</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {contactFormResponses.map((contactFormResponse) => (
-            <tr key={contactFormResponse.id}>
-              <td>{truncate(contactFormResponse.id)}</td>
-              <td>{truncate(contactFormResponse.name)}</td>
-              <td>{timeTag(contactFormResponse.createdAt)}</td>
-              <td>{truncate(contactFormResponse.email)}</td>
-              <td>{truncate(contactFormResponse.message)}</td>
-              <td>
-                <nav className="rw-table-actions">
-                  <Link
-                    to={routes.contactFormResponse({
-                      id: contactFormResponse.id,
-                    })}
+            <TableRow key={contactFormResponse.id}>
+              <TableCell>{truncate(contactFormResponse.id)}</TableCell>
+              <TableCell>{truncate(contactFormResponse.name)}</TableCell>
+              <TableCell>{timeTag(contactFormResponse.createdAt)}</TableCell>
+              <TableCell>{truncate(contactFormResponse.email)}</TableCell>
+              <TableCell>{truncate(contactFormResponse.message)}</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                  <Button
+                    onClick={() =>
+                      navigate(
+                        routes.contactFormResponse({
+                          id: contactFormResponse.id,
+                        })
+                      )
+                    }
                     title={
                       'Show contactFormResponse ' +
                       contactFormResponse.id +
                       ' detail'
                     }
-                    className="rw-button rw-button-small"
+                    variant="contained"
                   >
                     Show
-                  </Link>
-                  <button
-                    type="button"
+                  </Button>
+                  <Button
+                    variant="contained"
                     title={
                       'Delete contactFormResponse ' + contactFormResponse.id
                     }
-                    className="rw-button rw-button-small rw-button-red"
                     onClick={() => onDeleteClick(contactFormResponse.id)}
                   >
                     Delete
-                  </button>
-                </nav>
-              </td>
-            </tr>
+                  </Button>
+                </Box>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </TableContainer>
+    </Box>
   )
 }
 
