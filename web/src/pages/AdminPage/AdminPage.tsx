@@ -91,6 +91,8 @@ const AdminPage = () => {
             <Typography> Loading...</Typography>
           ) : error ? (
             <Typography>{error.message}</Typography>
+          ) : data.bookings.length === 0 ? (
+            <Typography>No projects</Typography>
           ) : (
             data.bookings.map((booking, i) => {
               if (new Date(booking.startTime) > new Date()) {

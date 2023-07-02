@@ -73,9 +73,14 @@ const TheaterPage = () => {
             <Tabs
               value={category}
               onChange={(e, v) => setCategory(v)}
-              centered
               variant="scrollable"
               scrollButtons="auto"
+              sx={{
+                color: 'primary.main',
+                '& .MuiTabs-scroller': {
+                  padding: theme.spacing(1),
+                },
+              }}
             >
               {categories.map((categoryAtI, i) => (
                 <Tab

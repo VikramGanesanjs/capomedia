@@ -43,6 +43,13 @@ const NewEquipment = () => {
       }}
     >
       <Typography variant="h4">New Equipment</Typography>
+      <Typography>
+        The predefined categories which can be changed are:
+      </Typography>
+      <Typography>
+        'Camera Equipment', 'Audio Equipment', 'Lighting Equipment', and
+        'Miscellaneous'
+      </Typography>
       <EquipmentForm onSave={onSave} loading={loading} error={error} />
     </Box>
   )
