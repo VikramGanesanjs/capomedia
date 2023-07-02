@@ -73,7 +73,7 @@ const TheaterPage = () => {
             <Tabs
               value={category}
               onChange={(e, v) => setCategory(v)}
-              variant="fullWidth"
+              variant="scrollable"
               scrollButtons="auto"
               sx={{
                 xs: { width: '80%' },
