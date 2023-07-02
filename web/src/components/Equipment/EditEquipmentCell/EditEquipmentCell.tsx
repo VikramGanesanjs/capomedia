@@ -68,7 +68,12 @@ export const Success = ({ equipment }: CellSuccessProps<EditEquipmentById>) => {
       }}
     >
       <Typography variant="h4">Edit Equipment</Typography>
-      <EquipmentForm onSave={onSave} loading={loading} error={error} />
+      <EquipmentForm
+        onSave={onSave}
+        equipment={equipment}
+        loading={loading}
+        error={error}
+      />
     </Box>
   )
 }

@@ -15,6 +15,7 @@ export const schema = gql`
     video(id: Int!): Video @skipAuth
     videosByCategory(category: String!): [Video]! @skipAuth
     featuredVideos: [Video]! @skipAuth
+    latestVideoByCategory(category: String!): Video @skipAuth
   }
 
   input CreateVideoInput {

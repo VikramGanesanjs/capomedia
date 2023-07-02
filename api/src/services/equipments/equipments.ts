@@ -42,12 +42,11 @@ export const updateEquipment: MutationResolvers['updateEquipment'] = ({
   })
 }
 
-export const deleteEquipment: MutationResolvers['deleteEquipment'] = ({
+export const deleteEquipment: MutationResolvers['deleteEquipment'] = async ({
   id,
 }) => {
-  return db.equipment.delete({
-    where: { id },
-  })
+  await db.bookingsOnEquipments.deleteMany({ where: { equipmentId: id } })
+  return db.equipment.delete({ where: { id } })
 }
 
 export const Equipment: EquipmentRelationResolvers = {

@@ -5,39 +5,59 @@ import Reveal from 'react-reveal/Reveal'
 import Zoom from 'react-reveal/Zoom'
 
 import { navigate, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
+import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import HomePageCard from 'src/components/HomePageCard/HomePageCard'
 
+const Preview = ({ url, id }) => {
+  const theme = useTheme()
+  const expr = /(\d+)/g
+
+  const vimeoId = url.match(expr)
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      <Box>
+        <Button
+          onClick={() => navigate(routes.video({ id: id }))}
+          sx={{ p: 0, boxShadow: `4px 4px ${theme.palette.primary.main}` }}
+        >
+          <img
+            style={{
+              objectFit: 'cover',
+            }}
+            alt="thumbnail"
+            src={`https://vumbnail.com/${vimeoId}.jpg`}
+          />
+        </Button>
+      </Box>
+    </Box>
+  )
+}
+
+const QUERY = gql`
+  query FindLatestEpisode($category: String!) {
+    latestVideoByCategory(category: $category) {
+      id
+      vimeoUrl
+    }
+  }
+`
+
 const HomePage = () => {
   const theme = useTheme()
-
-  const homePageCardContent = [
-    {
-      name: 'Theater',
-      key: 0,
-      description:
-        'Watch our show, films made by students in our class, and other films which visually inspire us!',
-      color: theme.palette.primary.main,
-      route: routes.theater(),
+  const { data, loading, error } = useQuery(QUERY, {
+    variables: { category: 'Capo.360' },
+    onCompleted(data) {
+      console.log(data)
     },
-    {
-      name: 'Contact Us',
-      key: 1,
-      description:
-        'Contact us with any questions you have about the class, what we do, and how you can join. ',
-      color: theme.palette.secondary.main,
-      route: routes.contact(),
-    },
-    {
-      name: 'About Us',
-      key: 2,
-      description:
-        'Learn more about CAPOmedia, what we do, our goals, and frequently asked questions',
-      color: theme.palette.secondary.dark,
-      route: routes.about(),
-    },
-  ]
+  })
 
   return (
     <Box
@@ -128,16 +148,19 @@ const HomePage = () => {
         <Fade left>
           <Typography variant="h4">Latest Episode:</Typography>
         </Fade>
-        <Fade collapse bottom>
-          <Button href="https://vimeo.com/823134357">
-            <ReactPlayer
-              url="https://vimeo.com/823134357"
-              controls={true}
-              height="50vh"
-              width="50vw"
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : error ? (
+          <Typography>{error.message} </Typography>
+        ) : (
+          <Fade collapse bottom>
+            <Preview
+              url={data.latestVideoByCategory.vimeoUrl}
+              id={data.latestVideoByCategory.id}
             />
-          </Button>
-        </Fade>
+          </Fade>
+        )}
+
         <Fade collapse bottom>
           <Box
             sx={{

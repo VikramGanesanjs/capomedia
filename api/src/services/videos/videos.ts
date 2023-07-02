@@ -18,6 +18,15 @@ export const videosByCategory: QueryResolvers['videosByCategory'] = ({
   return db.video.findMany({ where: { category } })
 }
 
+export const latestVideoByCategory: QueryResolvers['latestVideoByCategory'] = ({
+  category,
+}) => {
+  return db.video.findFirst({
+    orderBy: { createdAt: 'desc' },
+    where: { category },
+  })
+}
+
 export const featuredVideos: QueryResolvers['featuredVideos'] = () => {
   return db.video.findMany({ where: { featured: true } })
 }
