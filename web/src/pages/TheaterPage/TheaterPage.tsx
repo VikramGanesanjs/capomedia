@@ -73,9 +73,10 @@ const TheaterPage = () => {
             <Tabs
               value={category}
               onChange={(e, v) => setCategory(v)}
-              variant="scrollable"
+              variant="fullWidth"
               scrollButtons="auto"
               sx={{
+                xs: { width: '80%' },
                 color: 'primary.main',
                 '& .MuiTabs-scroller': {
                   padding: theme.spacing(1),
