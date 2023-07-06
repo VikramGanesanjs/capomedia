@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import type {
   FindVideoCategoryQuery,
   FindVideoCategoryQueryVariables,
@@ -19,9 +19,17 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => (
+  <Typography color="white" variant="h4">
+    Loading...
+  </Typography>
+)
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => (
+  <Typography color="white" variant="h4">
+    No videos yet.
+  </Typography>
+)
 
 export const Failure = ({
   error,

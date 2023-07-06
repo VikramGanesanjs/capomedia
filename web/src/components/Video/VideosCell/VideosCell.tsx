@@ -20,7 +20,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <Typography color="white">Loading...</Typography>
 
 export const Empty = () => {
   return (
@@ -33,7 +33,9 @@ export const Empty = () => {
         gap: 2,
       }}
     >
-      <Typography variant="h4">{'No videos yet. '}</Typography>
+      <Typography variant="h4" color="white">
+        {'No videos yet. '}
+      </Typography>
     </Box>
   )
 }
