@@ -31,7 +31,8 @@ const ScaffoldLayout = ({
         left: 0,
         bottom: 0,
         right: 0,
-        overflow: 'auto',
+        overflowY: 'auto',
+        overflowX: 'hidden',
         p: 0,
         m: 0,
       }}
