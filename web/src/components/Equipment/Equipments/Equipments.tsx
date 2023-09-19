@@ -68,6 +68,8 @@ const EquipmentsList = ({ equipments }: FindEquipments) => {
             <TableCell>Description</TableCell>
             <TableCell>Created at</TableCell>
             <TableCell>Category</TableCell>
+            <TableCell>Are there multiple?</TableCell>
+            <TableCell>Total Quantity</TableCell>
             <TableCell>Bookings</TableCell>
             <TableCell>&nbsp;</TableCell>
           </TableRow>
@@ -81,6 +83,10 @@ const EquipmentsList = ({ equipments }: FindEquipments) => {
                 <TableCell>{truncate(equipment.description)}</TableCell>
                 <TableCell>{timeTag(equipment.createdAt)}</TableCell>
                 <TableCell>{truncate(equipment.category)}</TableCell>
+                <TableCell>{equipment.multiple ? 'Yes' : 'No'}</TableCell>
+                <TableCell>
+                  {equipment.multiple ? equipment.quantityTotal : 'N/A'}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="expand row"

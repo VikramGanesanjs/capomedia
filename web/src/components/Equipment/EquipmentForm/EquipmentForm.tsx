@@ -1,4 +1,12 @@
-import { Box, Button, Typography } from '@mui/material'
+import { useState } from 'react'
+
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@mui/material'
 import type { EditEquipmentById, UpdateEquipmentInput } from 'types/graphql'
 
 import {
@@ -8,6 +16,7 @@ import {
   Label,
   TextField,
   Submit,
+  NumberField,
 } from '@redwoodjs/forms'
 import type { RWGqlError } from '@redwoodjs/forms'
 
@@ -22,9 +31,12 @@ interface EquipmentFormProps {
 
 const EquipmentForm = (props: EquipmentFormProps) => {
   const onSubmit = (data: FormEquipment) => {
+    data.multiple = multiple
+
     props.onSave(data, props?.equipment?.id)
   }
 
+  const [multiple, setMultiple] = useState(false)
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <Form<FormEquipment> onSubmit={onSubmit} error={props.error}>
@@ -87,6 +99,24 @@ const EquipmentForm = (props: EquipmentFormProps) => {
         />
 
         <FieldError name="category" className="rw-field-error" />
+
+        <FormControlLabel
+          control={<Checkbox onChange={(e) => setMultiple(true)} />}
+          label={'Are there multiple of this piece of equipment?'}
+        />
+        {multiple ? (
+          <>
+            <Label name="multiple">
+              <Typography>How many do you have in total?</Typography>
+            </Label>
+            <NumberField
+              name="quantityTotal"
+              defaultValue={props.equipment?.quantityTotal}
+            />
+          </>
+        ) : (
+          <></>
+        )}
 
         <div className="rw-button-group">
           <Submit

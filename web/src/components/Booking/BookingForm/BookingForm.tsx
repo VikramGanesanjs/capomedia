@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import {
   Typography,
   Box,
-  useTheme,
   Checkbox,
   FormControlLabel,
   Button,
@@ -63,6 +62,7 @@ const BookingForm = (props: BookingFormProps) => {
     useState(equipmentCategories.map(() => []))
 
   const onEquipmentSave = (index, equipmentIds, defaultChecked) => {
+    console.log(equipmentIds)
     if (defaultChecked) {
       const copy = [...removalList]
       copy.push(equipmentIds)
@@ -146,8 +146,6 @@ const BookingForm = (props: BookingFormProps) => {
     props.booking?.equipments,
     equipmentsByCategory,
   ])
-
-  const theme = useTheme()
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>

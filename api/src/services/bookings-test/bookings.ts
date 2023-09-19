@@ -62,6 +62,8 @@ export const createBooking: MutationResolvers['createBooking'] = ({
           equipment: {
             connect: { id: equipment.equipmentId },
           },
+          multiple: equipment.multiple,
+          quantity: equipment.quantity ?? 1,
         })),
       },
     },
@@ -160,11 +162,13 @@ export const updateBooking: MutationResolvers['updateBooking'] = async ({
       })
   }
 
+  const equipments2 = input.equipments ?? existingBooking.equipments
+  const userId2 = input.userId ?? existingBooking.userId
   const { equipments, userId, ...rest } = input
   return db.booking.update({
     data: {
       user: {
-        connect: { id: userId },
+        connect: { id: userId2 },
       },
       ...rest,
       equipments: {
@@ -172,7 +176,7 @@ export const updateBooking: MutationResolvers['updateBooking'] = async ({
           bookingId: id,
           equipmentId: { in: removalList },
         },
-        connectOrCreate: equipments.map((equipment) => ({
+        connectOrCreate: equipments2.map((equipment) => ({
           where: {
             bookingId_equipmentId: {
               bookingId: id,
@@ -209,5 +213,4 @@ export const Booking: BookingRelationResolvers = {
       include: { equipment: true },
     })
   },
-  // I deleted a relation resolver for the equipment because of the custom stuff I did up there, so  if this breaks I should add it back
 }

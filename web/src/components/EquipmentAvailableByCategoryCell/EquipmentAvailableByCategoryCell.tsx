@@ -1,6 +1,12 @@
 import { useState } from 'react'
 
-import { FormGroup, FormControlLabel, Checkbox } from '@mui/material'
+import {
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Box,
+  TextField,
+} from '@mui/material'
 import type {
   Booking,
   BookingEquipment,
@@ -17,7 +23,10 @@ export const QUERY = gql`
       name
       description
       category
+      multiple
+      quantityTotal
       bookings {
+        quantity
         booking {
           startTime
           endTime
@@ -55,47 +64,46 @@ export const Failure = ({
 const checkAvailability = (
   bookings: BookingEquipment[],
   shootStartTime,
-  shootEndTime
-): [boolean, Booking?] => {
+  shootEndTime,
+  multiple,
+  totalQty
+): [boolean, any] => {
   if (bookings.length === 0) {
     return [true, null]
   }
   const reversedBookings = [...bookings].reverse()
+  if (!multiple) {
+    for (const booking of reversedBookings) {
+      const cond1 =
+        new Date(booking.booking.startTime) <= new Date(shootEndTime)
+      const cond2 =
+        new Date(booking.booking.endTime) >= new Date(shootStartTime)
 
-  for (const booking of reversedBookings) {
-    const existingStartTimeEarlier =
-      new Date(booking.booking.startTime) < new Date(shootStartTime)
-    const existingEndTimeEarlier =
-      new Date(booking.booking.endTime) < new Date(shootEndTime)
+      if (cond1 && cond2) {
+        return [false, booking.booking]
+      }
+    }
+    return [true, null]
+  } else {
+    let qtyLeft = totalQty
+    let latestConflictingBooking = reversedBookings[0].booking
+    for (const booking of reversedBookings) {
+      const cond1 =
+        new Date(booking.booking.startTime) <= new Date(shootEndTime)
+      const cond2 =
+        new Date(booking.booking.endTime) >= new Date(shootStartTime)
 
-    const existingStartEarlierProposedEnd =
-      new Date(booking.booking.startTime) < new Date(shootEndTime)
-    const proposedStartEarlierExistingEnd =
-      new Date(shootStartTime) < new Date(booking.booking.endTime)
-
-    const existingEnvelopsProposed =
-      existingStartTimeEarlier && !existingEndTimeEarlier
-    const proposedEnvelopsExisting =
-      !existingStartTimeEarlier && existingEndTimeEarlier
-    const existingBeforeProposedConflict =
-      existingStartTimeEarlier &&
-      existingEndTimeEarlier &&
-      proposedStartEarlierExistingEnd
-    const proposedBeforeExistingConflict =
-      !existingStartTimeEarlier &&
-      !existingEndTimeEarlier &&
-      existingStartEarlierProposedEnd
-
-    if (
-      existingEnvelopsProposed ||
-      proposedEnvelopsExisting ||
-      existingBeforeProposedConflict ||
-      proposedBeforeExistingConflict
-    ) {
-      return [false, booking.booking]
+      if (cond1 && cond2) {
+        latestConflictingBooking = booking.booking
+        qtyLeft -= booking.quantity
+      }
+    }
+    if (qtyLeft > 0) {
+      return [true, qtyLeft]
+    } else {
+      return [false, latestConflictingBooking]
     }
   }
-  return [true, null]
 }
 
 interface SuccessProps {
@@ -125,7 +133,13 @@ export const Success = ({
   SuccessProps) => {
   const [equipmentIds, setEquipmentIds] = useState([])
 
-  const handleCheckboxChange = (e, equipment, defaultChecked) => {
+  const handleCheckboxChange = (
+    e,
+    equipment,
+    defaultChecked,
+    multiple,
+    quantity
+  ) => {
     if (!defaultChecked) {
       if (e.target.checked) {
         const copy = [...equipmentIds]
@@ -133,6 +147,8 @@ export const Success = ({
           equipmentId: equipment.id,
           equipmentName: equipment.name,
           equipmentCategory: equipment.category,
+          multiple: multiple,
+          quantity: multiple ? quantity : 1,
         })
         setEquipmentIds(copy)
         onSave(categoryIndex, copy, defaultChecked)
@@ -152,54 +168,153 @@ export const Success = ({
     }
   }
 
+  const handleValueChange = (e, equipment) => {
+    const copy = [...equipmentIds]
+    const copy2 = copy.filter((obj) => obj.equipmentId !== equipment.id)
+    if (copy.length !== copy2.length) {
+      copy2.push({
+        equipmentId: equipment.id,
+        equipmentName: equipment.name,
+        equipmentCategory: equipment.category,
+        multiple: true,
+        quantity: parseInt(e.target.value),
+      })
+      setEquipmentIds(copy2)
+      onSave(categoryIndex, copy2, false)
+    }
+  }
+
   return (
     <FormGroup>
       {equipments.map((equipment, i) => {
-        const [available, possibleConflictingBooking] = checkAvailability(
+        const [
+          available,
+          possibleConflictingBookingorNumberofMultipleAvailable,
+        ] = checkAvailability(
           equipment.bookings,
           shootStartTime,
-          shootEndTime
+          shootEndTime,
+          equipment.multiple,
+          equipment.quantityTotal
         )
         if (
           editBooking &&
           !available &&
-          possibleConflictingBooking?.id == editBooking.id
+          possibleConflictingBookingorNumberofMultipleAvailable?.id ==
+            editBooking.id
         ) {
           return (
-            <FormControlLabel
+            <CheckboxMultiple
               key={i}
-              control={
-                <Checkbox
-                  onChange={(e) => handleCheckboxChange(e, equipment, true)}
-                  defaultChecked
-                />
+              valueChange={(e, equipment) => handleValueChange(e, equipment)}
+              onChange={(e, equipment, def, mult, quant) =>
+                handleCheckboxChange(e, equipment, def, mult, quant)
               }
-              label={`${equipment.name}   ${equipment.description}`}
+              equipment={equipment}
+              multiple={equipment.multiple}
+              label={`${equipment.name}   (${equipment.description})`}
+              numAvail={possibleConflictingBookingorNumberofMultipleAvailable}
             />
           )
         } else if (available) {
           return (
-            <FormControlLabel
+            <CheckboxMultiple
+              valueChange={(e, equipment) => handleValueChange(e, equipment)}
               key={i}
-              control={
-                <Checkbox
-                  onChange={(e) => handleCheckboxChange(e, equipment, false)}
-                />
+              onChange={(e, equipment, def, mult, quant) =>
+                handleCheckboxChange(e, equipment, def, mult, quant)
               }
-              label={`${equipment.name}   ${equipment.description}`}
+              equipment={equipment}
+              numAvail={possibleConflictingBookingorNumberofMultipleAvailable}
+              multiple={equipment.multiple}
+              label={`${equipment.name}   (${equipment.description})`}
             />
           )
         } else {
           return (
-            <FormControlLabel
+            <CheckboxMultiple
               key={i}
               disabled
-              control={<Checkbox />}
-              label={`${equipment.name} (not available on the date selected due to the project ${possibleConflictingBooking?.projectName} being booked)`}
+              valueChange={(e, equipment) => handleValueChange(e, equipment)}
+              onChange={(e, equipment, def, mult, quant) =>
+                handleCheckboxChange(e, equipment, def, mult, quant)
+              }
+              numAvail={possibleConflictingBookingorNumberofMultipleAvailable}
+              equipment={equipment}
+              multiple={equipment.multiple}
+              label={`${equipment.name} (not available on the date selected due to the project ${possibleConflictingBookingorNumberofMultipleAvailable?.projectName} being booked)`}
             />
           )
         }
       })}
     </FormGroup>
+  )
+}
+
+interface CheckboxMultipleProps {
+  disabled?: boolean
+  onChange: any
+  valueChange: any
+  label: string
+  multiple: boolean
+  equipment: any
+  numAvail: any
+}
+
+const CheckboxMultiple = ({
+  disabled,
+  onChange,
+  label,
+  equipment,
+  multiple,
+  numAvail,
+  valueChange,
+}: CheckboxMultipleProps) => {
+  const [quantity, setQuantity] = useState(0)
+  if (multiple) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 2,
+        }}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(e) => {
+                onChange(e, equipment, false, multiple, quantity)
+              }}
+            />
+          }
+          label={label}
+          disabled={disabled}
+        />
+        {!disabled && (
+          <TextField
+            label={`How many? ${numAvail ?? 'all'} available`}
+            variant="filled"
+            type="number"
+            onChange={(e) => {
+              setQuantity(parseInt(e.target.value))
+              valueChange(e, equipment)
+            }}
+            disabled={disabled}
+          />
+        )}
+      </Box>
+    )
+  }
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          onChange={(e) => onChange(e, equipment, false, multiple, quantity)}
+        />
+      }
+      label={label}
+      disabled={disabled}
+    />
   )
 }

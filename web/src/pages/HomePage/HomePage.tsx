@@ -12,6 +12,9 @@ import HomePageCard from 'src/components/HomePageCard/HomePageCard'
 const Preview = ({ url, id }) => {
   const theme = useTheme()
   const expr = /(\d+)/g
+  if (url === '' || id === '') {
+    return <Typography>There was an error</Typography>
+  }
 
   const vimeoId = url.match(expr)
   return (
@@ -152,13 +155,15 @@ const HomePage = () => {
           <Typography>Loading...</Typography>
         ) : error ? (
           <Typography>{error.message} </Typography>
-        ) : (
+        ) : data.latestVideoByCategory ? (
           <Fade collapse bottom>
             <Preview
-              url={data.latestVideoByCategory.vimeoUrl}
-              id={data.latestVideoByCategory.id}
+              url={data.latestVideoByCategory.vimeoUrl ?? ''}
+              id={data.latestVideoByCategory.id ?? ''}
             />
           </Fade>
+        ) : (
+          <Typography>There was an error</Typography>
         )}
 
         <Fade collapse bottom>

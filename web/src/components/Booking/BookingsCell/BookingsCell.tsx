@@ -42,6 +42,8 @@ export const QUERY = gql`
       extraComments
       approval
       equipments {
+        multiple
+        quantity
         equipment {
           name
         }
@@ -67,9 +69,9 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error?.message}</div>
 )
 
-const DELETE_EQUIPMENT_MUTATION = gql`
-  mutation DeleteEquipmentMutation($id: Int!) {
-    deleteEquipment(id: $id) {
+const DELETE_BOOKING_MUTATION = gql`
+  mutation DeleteBookingMutation($id: Int!) {
+    deleteBooking(id: $id) {
       id
     }
   }
@@ -78,9 +80,9 @@ const DELETE_EQUIPMENT_MUTATION = gql`
 export const Success = ({ bookings }: CellSuccessProps<FindBookings>) => {
   const theme = useTheme()
 
-  const [deleteEquipment] = useMutation(DELETE_EQUIPMENT_MUTATION, {
+  const [deleteEquipment] = useMutation(DELETE_BOOKING_MUTATION, {
     onCompleted: () => {
-      toast.success('Equipment deleted')
+      toast.success('Booking deleted')
     },
     onError: (error) => {
       toast.error(error.message)
@@ -93,11 +95,11 @@ export const Success = ({ bookings }: CellSuccessProps<FindBookings>) => {
   })
 
   const onDeleteClick = (id: DeleteBookingMutationVariables['id']) => {
-    if (confirm('Are you sure you want to delete equipment ' + id + '?')) {
+    if (confirm('Are you sure you want to delete this booking?')) {
       deleteEquipment({ variables: { id } })
     }
   }
-  const [opened, setOpened] = useState(bookings.map((booking) => false))
+  const [opened, setOpened] = useState(bookings.map((_) => false))
 
   return (
     <TableContainer>
@@ -186,10 +188,12 @@ export const Success = ({ bookings }: CellSuccessProps<FindBookings>) => {
               >
                 <Collapse in={opened[i]} timeout="auto" unmountOnExit>
                   <Box sx={{ margin: 1 }}>
-                    {booking.equipments.map((booking, i) => {
+                    {booking.equipments.map((equip, i) => {
                       return (
                         <Typography key={i} gutterBottom>
-                          {booking.equipment.name}
+                          {`${equip.equipment.name} ${
+                            equip.multiple ? '(' + equip.quantity + ')' : ''
+                          }`}
                         </Typography>
                       )
                     })}

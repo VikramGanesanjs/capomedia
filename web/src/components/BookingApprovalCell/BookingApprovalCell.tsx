@@ -41,6 +41,8 @@ export const QUERY = gql`
         equipment {
           name
         }
+        multiple
+        quantity
       }
     }
   }
@@ -173,7 +175,11 @@ export const Success = ({
                     {booking.equipments.map((equipment, i) => {
                       return (
                         <Typography key={i} gutterBottom>
-                          {equipment.equipment.name}
+                          {`${equipment.equipment.name} ${
+                            equipment.multiple
+                              ? '(' + equipment.quantity + ')'
+                              : ''
+                          }`}
                         </Typography>
                       )
                     })}

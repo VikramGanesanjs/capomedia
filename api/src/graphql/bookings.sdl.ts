@@ -27,11 +27,15 @@ export const schema = gql`
     booking: Booking!
     equipment: Equipment!
     equipmentId: Int!
+    multiple: Boolean
+    quantity: Int
   }
   input BookingEquipmentInput {
     equipmentId: Int!
     equipmentName: String!
     equipmentCategory: String!
+    multiple: Boolean
+    quantity: Int
   }
 
   input CreateBookingInput {

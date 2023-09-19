@@ -6,6 +6,8 @@ export const schema = gql`
     bookings: [BookingEquipment]!
     createdAt: DateTime!
     category: String!
+    multiple: Boolean
+    quantityTotal: Int
   }
 
   type Query {
@@ -18,12 +20,16 @@ export const schema = gql`
     name: String!
     description: String
     category: String!
+    multiple: Boolean
+    quantityTotal: Int
   }
 
   input UpdateEquipmentInput {
     name: String
     description: String
     category: String
+    multiple: Boolean
+    quantityTotal: Int
   }
 
   type Mutation {

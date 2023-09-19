@@ -12,6 +12,8 @@ export const QUERY = gql`
       name
       description
       createdAt
+      multiple
+      quantityTotal
       category
       bookings {
         booking {

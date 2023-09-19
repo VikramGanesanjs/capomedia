@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -21,12 +21,14 @@ model User {
 }
 
 model Equipment {
-  id          Int                    @id @default(autoincrement())
-  name        String
-  description String?
-  bookings    BookingsOnEquipments[]
-  createdAt   DateTime               @default(now())
-  category    String
+  id            Int                    @id @default(autoincrement())
+  name          String
+  description   String?
+  bookings      BookingsOnEquipments[]
+  createdAt     DateTime               @default(now())
+  category      String
+  multiple      Boolean?               @default(false)
+  quantityTotal Int                    @default(0)
 }
 
 model Booking {
@@ -51,6 +53,8 @@ model BookingsOnEquipments {
   equipment   Equipment @relation(fields: [equipmentId], references: [id])
   equipmentId Int // relation scalar field (used in the `@relation` attribute above)
   assignedAt  DateTime  @default(now())
+  multiple    Boolean   @default(false)
+  quantity    Int       @default(1)
 
   @@id([bookingId, equipmentId])
 }
