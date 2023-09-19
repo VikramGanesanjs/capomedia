@@ -212,7 +212,7 @@ export const Success = ({
               }
               equipment={equipment}
               multiple={equipment.multiple}
-              label={`${equipment.name}   (${equipment.description})`}
+              label={`${equipment.name}   ${equipment.description}`}
               numAvail={possibleConflictingBookingorNumberofMultipleAvailable}
             />
           )
