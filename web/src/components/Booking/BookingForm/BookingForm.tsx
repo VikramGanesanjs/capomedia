@@ -325,7 +325,7 @@ const BookingForm = (props: BookingFormProps) => {
           be returned on the selected return date. Your equipment is not secured
           until the producer receives an approval email notification. Report any
           equipment malfunction or destruction to Mr. Landino immediately.
-          Please contact any of the CAPOmedia Season 17 Producers with any
+          Please contact any of the CAPOmedia Season 18 Producers with any
           questions or concerns.
         </Typography>
         <FormControlLabel
