@@ -187,6 +187,8 @@ export const updateBooking: MutationResolvers['updateBooking'] = async ({
             equipment: {
               connect: { id: equipment.equipmentId },
             },
+            multiple: equipment.multiple,
+            quantity: equipment.quantity ?? 1,
           },
         })),
       },
