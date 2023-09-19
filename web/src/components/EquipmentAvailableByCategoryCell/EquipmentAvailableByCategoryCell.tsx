@@ -293,7 +293,7 @@ const CheckboxMultiple = ({
         />
         {!disabled && (
           <TextField
-            label={`How many? ${numAvail ?? 'all'} available`}
+            label={`How many? ${numAvail ?? equipment.quantityTotal} available`}
             variant="filled"
             type="number"
             onChange={(e) => {
