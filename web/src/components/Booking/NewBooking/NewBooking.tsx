@@ -21,7 +21,7 @@ const NewBooking = () => {
     {
       onCompleted: () => {
         toast.success('Booking created')
-        navigate(routes.bookings())
+        navigate(routes.home())
       },
       onError: (error) => {
         toast.error(error.message)
