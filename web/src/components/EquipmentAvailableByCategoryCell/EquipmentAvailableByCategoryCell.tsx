@@ -88,10 +88,8 @@ const checkAvailability = (
     let qtyLeft = totalQty
     let latestConflictingBooking = reversedBookings[0].booking
     for (const booking of reversedBookings) {
-      const cond1 =
-        new Date(booking.booking.startTime) <= new Date(shootEndTime)
-      const cond2 =
-        new Date(booking.booking.endTime) >= new Date(shootStartTime)
+      const cond1 = new Date(booking.booking.startTime) < new Date(shootEndTime)
+      const cond2 = new Date(booking.booking.endTime) > new Date(shootStartTime)
 
       if (cond1 && cond2) {
         latestConflictingBooking = booking.booking
