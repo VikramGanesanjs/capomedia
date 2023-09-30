@@ -74,10 +74,8 @@ const checkAvailability = (
   const reversedBookings = [...bookings].reverse()
   if (!multiple) {
     for (const booking of reversedBookings) {
-      const cond1 =
-        new Date(booking.booking.startTime) <= new Date(shootEndTime)
-      const cond2 =
-        new Date(booking.booking.endTime) >= new Date(shootStartTime)
+      const cond1 = new Date(booking.booking.startTime) < new Date(shootEndTime)
+      const cond2 = new Date(booking.booking.endTime) > new Date(shootStartTime)
 
       if (cond1 && cond2) {
         return [false, booking.booking]
