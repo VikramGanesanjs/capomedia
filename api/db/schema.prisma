@@ -1,6 +1,7 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -16,7 +17,7 @@ model User {
   salt                String
   resetToken          String?
   bookings            Booking[]
-  resetTokenExpiresAt DateTime?
+  resetTokenExpiresAt DateTime? @db.Timestamp(0)
   roles               String    @default("user")
 }
 
@@ -43,7 +44,7 @@ model Booking {
   producerEmail String
   directorName  String
   projectName   String
-  extraComments String
+  extraComments String?
   approval      String                 @default("Pending")
 }
 
